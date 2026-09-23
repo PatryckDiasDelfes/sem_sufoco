@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sem_sufoco/features/home/pages/home_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -15,14 +16,14 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) {
-        return const HomePage();
+        return const MainPage();
       },
     ),
 
     GoRoute(
       path: '/segunda',
       builder: (context, state) {
-        return const SegundaPage();
+        return const HomePage();
       },
     ),
   ],
@@ -38,7 +39,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Sem sufoco',
+      title: 'Sem Sufoco',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF000000)),
       ),
@@ -48,21 +49,22 @@ class MainApp extends StatelessWidget {
 }
 
 // =========================
-// HOME
+// MAIN PAGE
 // =========================
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sem sufoco ola')),
+      appBar: AppBar(title: const Text('Sem Sufoco')),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Bem vindo ao sem sufoco!'),
+            const Text('Bem-vindo ao Sem Sufoco!'),
 
             const SizedBox(height: 20),
 
@@ -70,32 +72,9 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 context.go('/segunda');
               },
-              child: const Text('Ir para segunda página'),
+              child: const Text('Ir para Home'),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// =========================
-// SEGUNDA PÁGINA
-// =========================
-
-class SegundaPage extends StatelessWidget {
-  const SegundaPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Segunda página')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            context.pop();
-          },
-          child: const Text('Voltar'),
         ),
       ),
     );

@@ -28,4 +28,6 @@ class AppTextStyle {
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
+
+  static TextStyle? get smallBlack => null;
 }

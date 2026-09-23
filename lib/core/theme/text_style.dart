@@ -28,4 +28,8 @@ class AppTextStyle {
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
+
+  static const TextStyle buttonLabel = TextStyle(color: AppColors.white);
+
+  static TextStyle? get smallBlack => null;
 }

@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF000000)),
       ),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Sem sufoco ola')),
+        appBar: AppBar(title: const Text('Sem sufoco')),
         body: const Center(child: Text('bem vindo ao sem sufoco!')),
       ),
     );

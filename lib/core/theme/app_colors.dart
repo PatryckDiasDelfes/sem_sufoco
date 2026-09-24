@@ -12,4 +12,14 @@ class AppColors {
   static const Color tertiary = Color(0xFF98FFE0);
 
   static const Color cardGreen = Color(0xFF009D71);
+
+  // Dark theme (add transaction screen)
+  static const Color darkBackground = Color(0xFF060A09);
+  static const Color darkSurface = Color(0xFF101614);
+  static const Color darkBorder = Color(0xFF1E2624);
+  static const Color accent = Color(0xFF22E0A8);
+  static const Color accentDark = Color(0xFF14C08A);
+  static const Color labelGray = Color(0xFF7C8A86);
+  static const Color hintGray = Color(0xFF5F6B68);
+  static const Color error = Color(0xFFFF5C5C);
 }

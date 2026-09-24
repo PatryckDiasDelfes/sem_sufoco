@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,7 +13,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('')),
-      body: Container(),
+      // TEMP: shortcut to preview the add transaction page. Remove later.
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.push('/transactions/new'),
+          child: const Text('Abrir Adicionar Gasto'),
+        ),
+      ),
     );
   }
 }

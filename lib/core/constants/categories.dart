@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import 'package:material_symbols_icons/symbols.dart';
+
 class Categories {
   static const String alimentacao = 'Alimentação';
   static const String lazer = 'Lazer';
@@ -14,6 +17,10 @@ class CategoriasIcons {
   static const String assinaturas = 'assets/icons/assinaturas.png';
 }
 
+class CategoriasIconData {
+  static const IconData alimentacao = Symbols.chef_hat;
+}
+
 List<String> getCategories() {
   return [
     Categories.alimentacao,
@@ -21,5 +28,6 @@ List<String> getCategories() {
     Categories.transporte,
     Categories.compras,
     Categories.assinaturas,
+  
   ];
 }

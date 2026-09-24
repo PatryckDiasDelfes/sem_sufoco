@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
@@ -99,7 +100,7 @@ class LoginPageState extends State<LoginPage> {
 
                       ElevatedButton(
                         onPressed: () {
-                          // Login futuramente
+                          context.push('/ReleaseDetailsPage');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

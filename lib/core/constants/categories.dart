@@ -1,33 +1,25 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-class Categories {
-  static const String alimentacao = 'Alimentação';
-  static const String lazer = 'Lazer';
-  static const String transporte = 'Transporte';
-  static const String compras = 'Compras';
-  static const String assinaturas = 'Assinaturas';
+class Category {
+  final String name;
+  final IconData icon;
+  const Category({required this.name, required this.icon});
 }
 
 class CategoriasIcons {
-  static const String alimentacao = 'assets/icons/alimentacao.png';
-  static const String lazer = 'assets/icons/lazer.png';
-  static const String transporte = 'assets/icons/transporte.png';
-  static const String compras = 'assets/icons/compras.png';
-  static const String assinaturas = 'assets/icons/assinaturas.png';
-}
-
-class CategoriasIconData {
   static const IconData alimentacao = Symbols.chef_hat;
+  static const IconData lazer = Symbols.add;
+  static const IconData transporte = Symbols.directions_car;
+  static const IconData compras = Symbols.shopping_cart;
+  static const IconData assinaturas = Symbols.subscriptions;
 }
 
-List<String> getCategories() {
-  return [
-    Categories.alimentacao,
-    Categories.lazer,
-    Categories.transporte,
-    Categories.compras,
-    Categories.assinaturas,
-  
-  ];
-}
+// Lista pronta pra usar na tela
+const List<Category> kCategories = [
+  Category(name: 'Alimentação', icon: CategoriasIcons.alimentacao),
+  Category(name: 'Transporte', icon: CategoriasIcons.transporte),
+  Category(name: 'Assinaturas', icon: CategoriasIcons.assinaturas),
+  Category(name: 'Compras', icon: CategoriasIcons.compras),
+  Category(name: 'Lazer', icon: CategoriasIcons.lazer),
+];

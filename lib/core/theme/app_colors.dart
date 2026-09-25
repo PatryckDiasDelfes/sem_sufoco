@@ -13,11 +13,10 @@ class AppColors {
 
   static const Color cardGreen = Color(0xFF009D71);
 
-  // Settings (dark) palette
   static const Color darkBackground = Color(0xFF060B0A);
-  static const Color darkSurface = Color(0x0AFFFFFF); // white 4%
-  static const Color darkBorder = Color(0x14FFFFFF); // white 8%
-  static const Color darkDivider = Color(0x0FFFFFFF); // white 6%
+  static const Color darkSurface = Color(0x0AFFFFFF);
+  static const Color darkBorder = Color(0x14FFFFFF);
+  static const Color darkDivider = Color(0x0FFFFFFF);
   static const Color textPrimary = Color(0xFFF4FAF8);
   static const Color textMuted = Color(0xFF7C948D);
   static const Color chevron = Color(0xFF5C6E69);

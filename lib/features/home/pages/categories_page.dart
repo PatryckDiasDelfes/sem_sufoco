@@ -8,8 +8,6 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
-
     final items = [
       {'cat': kCategories[0], 'sub': '15 transações'},
       {'cat': kCategories[1], 'sub': '5 transações'},
@@ -23,8 +21,10 @@ class CategoriesPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: const Text('Categorias',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Categorias',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         actions: const [
           Icon(Symbols.settings, color: Color(0xFF5CCDA7)),
           SizedBox(width: 16),
@@ -47,24 +47,40 @@ class CategoriesPage extends StatelessWidget {
                   final Category cat = items[index]['cat'] as Category;
                   final String sub = items[index]['sub'] as String;
                   return InkWell(
-                   onTap: () => context.push('/gastos-categoria', extra: cat),
-                    child: Container( 
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0A2E1E),
-                      borderRadius: BorderRadius.circular(12),
+                    onTap: () => context.push('/gastos-categoria', extra: cat),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0A2E1E),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            cat.icon,
+                            size: 28,
+                            color: const Color(0xFF98FFE0),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            cat.name,
+                            style: const TextStyle(
+                              color: Color(0xFFFFFFFF),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          if (sub.isNotEmpty)
+                            Text(
+                              sub,
+                              style: const TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 13,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(cat.icon, size: 28, color: const Color(0xFF98FFE0)),
-                        const SizedBox(height: 8),
-                        Text(cat.name,
-                          style: const TextStyle(color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold, fontSize: 13)),
-                        if (sub.isNotEmpty)
-                          Text(sub, style: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 13)),
-                      ],
-                    ),
-                  ),
                   );
                 },
               ),
@@ -79,7 +95,10 @@ class CategoriesPage extends StatelessWidget {
                 _BottomItem(icon: Symbols.home, label: 'Início', active: true),
                 _BottomItem(icon: Symbols.add_circle, label: 'Novo'),
                 _BottomItem(icon: Symbols.flag, label: 'Metas'),
-                _BottomItem(icon: Symbols.account_balance_wallet, label: 'Cashback'),
+                _BottomItem(
+                  icon: Symbols.account_balance_wallet,
+                  label: 'Cashback',
+                ),
               ],
             ),
           ),
@@ -93,7 +112,11 @@ class _BottomItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool active;
-  const _BottomItem({required this.icon, required this.label, this.active = false});
+  const _BottomItem({
+    required this.icon,
+    required this.label,
+    this.active = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +124,14 @@ class _BottomItem extends StatelessWidget {
       children: [
         Icon(icon, size: 26, color: Colors.white),
         const SizedBox(height: 2),
-        Text(label,
-          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
       ],
     );
   }

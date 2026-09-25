@@ -28,5 +28,17 @@ final GoRouter appRouter = GoRouter(
         return const TransactionPage();
       },
     ),
+    GoRoute(
+      path: '/TransactionPage',
+      builder: (context, state) {
+        return const TransactionPage();
+      },
+    ),
+    GoRoute(
+      path: '/TransactionPage',
+      builder: (context, state) {
+        return const TransactionPage();
+      },
+    ),
   ],
 );

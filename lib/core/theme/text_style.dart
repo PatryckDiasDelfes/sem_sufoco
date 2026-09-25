@@ -17,6 +17,15 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle bodySmall = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+  );
+  static const TextStyle inputLabel = TextStyle(
+    color: AppColors.gray200,
+    fontSize: 15,
+  );
+
   static const TextStyle subTitle = TextStyle(
     color: AppColors.white,
     fontSize: 18,

@@ -1,11 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:sem_sufoco/features/home/pages/categories_page.dart';
+import 'package:sem_sufoco/features/home/pages/home_page.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
-import 'package:sem_sufoco/features/home/pages/gastos_categoria_page.dart';
-import 'package:sem_sufoco/core/constants/categories.dart';
+import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
+import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: 'login',
+  initialLocation: '/homepage',
+
   routes: [
     GoRoute(
       path: '/login',
@@ -13,18 +14,18 @@ final GoRouter appRouter = GoRouter(
         return const LoginPage();
       },
     ),
+
     GoRoute(
-      path: '/categoria',
+      path: '/ReleaseDetailsPage',
       builder: (context, state) {
-        return const CategoriesPage();
+        return const ReleaseDetailsPage();
       },
     ),
+
     GoRoute(
-      path: '/gastos',
+      path: '/TransactionPage',
       builder: (context, state) {
-        final extra = state.extra;
-        final cat = state.extra as Category? ?? kCategories[0];
-        return GastosCategoria(categoria: cat);
+        return const TransactionPage();
       },
     ),
   ],

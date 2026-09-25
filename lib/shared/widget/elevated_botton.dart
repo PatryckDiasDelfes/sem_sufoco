@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 
-enum ButtonType { filled, outlined, addToCart, smalButton }
+enum ButtonType { filled, outlined, addToCart, smallButton, responsive }
 
 class AppElevatedButton extends StatelessWidget {
   const AppElevatedButton({
@@ -86,9 +86,20 @@ class AppElevatedButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         );
-      case ButtonType.smalButton:
+      case ButtonType.smallButton:
         return ElevatedButton.styleFrom(
           minimumSize: const Size(20, 55),
+          foregroundColor: AppColors.black,
+          backgroundColor: AppColors.gray200,
+          disabledForegroundColor: AppColors.white,
+          disabledBackgroundColor: AppColors.black,
+          textStyle: AppTextStyle.buttonLabel,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+        );
+      case ButtonType.responsive:
+        return ElevatedButton.styleFrom(
           foregroundColor: AppColors.black,
           backgroundColor: AppColors.gray200,
           disabledForegroundColor: AppColors.white,

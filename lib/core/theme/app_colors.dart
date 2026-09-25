@@ -12,4 +12,20 @@ class AppColors {
   static const Color tertiary = Color(0xFF98FFE0);
 
   static const Color cardGreen = Color(0xFF009D71);
+
+  // Settings (dark) palette
+  static const Color darkBackground = Color(0xFF060B0A);
+  static const Color darkSurface = Color(0x0AFFFFFF); // white 4%
+  static const Color darkBorder = Color(0x14FFFFFF); // white 8%
+  static const Color darkDivider = Color(0x0FFFFFFF); // white 6%
+  static const Color textPrimary = Color(0xFFF4FAF8);
+  static const Color textMuted = Color(0xFF7C948D);
+  static const Color chevron = Color(0xFF5C6E69);
+  static const Color accent = Color(0xFF1FE0A8);
+  static const Color accentDark = Color(0xFF0FBB88);
+  static const Color onAccent = Color(0xFF05231A);
+  static const Color blue = Color(0xFF5B93F5);
+  static const Color yellow = Color(0xFFE0A91F);
+  static const Color purple = Color(0xFFB18BF7);
+  static const Color danger = Color(0xFFFF6B6B);
 }

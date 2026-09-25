@@ -10,6 +10,23 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color gray200 = Color(0xFFE5E5E5);
   static const Color darkGreen = Color(0xFF0A2E1E);
+
+  static const Color cardGreen = Color(0xFF009D71);
+
+  static const Color darkBackground = Color(0xFF060B0A);
+  static const Color darkSurface = Color(0x0AFFFFFF);
+  static const Color darkBorder = Color(0x14FFFFFF);
+  static const Color darkDivider = Color(0x0FFFFFFF);
+  static const Color textPrimary = Color(0xFFF4FAF8);
+  static const Color textMuted = Color(0xFF7C948D);
+  static const Color chevron = Color(0xFF5C6E69);
+  static const Color accent = Color(0xFF1FE0A8);
+  static const Color accentDark = Color(0xFF0FBB88);
+  static const Color onAccent = Color(0xFF05231A);
+  static const Color blue = Color(0xFF5B93F5);
+  static const Color yellow = Color(0xFFE0A91F);
+  static const Color purple = Color(0xFFB18BF7);
+  static const Color danger = Color(0xFFFF6B6B);
   static const Color cardGreen = Color.fromARGB(120, 0, 157, 113);
   static const Color shodownBox = Color(0xFF009D71);
   static const Color bg = Color(0xFF0F2E27);

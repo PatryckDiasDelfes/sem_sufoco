@@ -15,17 +15,21 @@ class ReleaseDetailsPage extends StatelessWidget {
           onPressed: () {
             context.pop();
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         title: const Text(
           'Compra no débito',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
-        actions: const [
-          Icon(Icons.help_outline, color: Color(0xFF00BFA5)),
-          SizedBox(width: 16),
-        ],
+        // actions: const [
+        //   Icon(Icons.help_outline, color: Color(0xFF00BFA5)),
+        //   SizedBox(width: 16),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(

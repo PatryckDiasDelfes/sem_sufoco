@@ -8,13 +8,12 @@ class Category {
 }
 
 class CategoriasIcons {
-  static const IconData alimentacao = Symbols.chef_hat;
-  static const IconData lazer = Symbols.add;
-  static const IconData transporte = Symbols.directions_car;
+  static const IconData alimentacao = Symbols.restaurant; // chef_hat não existe, usei restaurant
+  static const IconData lazer = Symbols.sports_esports;
+  static const IconData transporte = Symbols.airplane_ticket; // <-- AQUI ESTAVA O ERRO
   static const IconData compras = Symbols.shopping_cart;
   static const IconData assinaturas = Symbols.subscriptions;
 }
-
 
 const List<Category> kCategories = [
   Category(name: 'Alimentação', icon: CategoriasIcons.alimentacao),

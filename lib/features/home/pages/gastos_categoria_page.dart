@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/categories.dart';
 
 class GastosCategoria extends StatelessWidget {
-  const GastosCategoria({super.key});
+  final Category categoria;
+
+  const GastosCategoria({super.key, required this.categoria});
 
   @override
   Widget build(BuildContext context) {
     const green = Color(0xFF009D71);
     
     final items = [
-      {'nome': 'Supermercado', 'cat': 'Alimentação', 'valor': '-18,10 R\$', 'data': '7 de\njunho'},
-      {'nome': 'Spotify Premium', 'cat': 'Lazer', 'valor': '-5,20 R\$', 'data': '7 de\njunho'},
-      {'nome': 'Aluguel do apartamento', 'cat': 'Moradia', 'valor': '-23,000\nR\$', 'data': '6 de\njunho'},
-      {'nome': 'Netflix', 'cat': 'Assinatura', 'valor': '-56,30\nR\$', 'data': '5 de\njunho'},
+      {'nome': 'Supermercado', 'cat': 'Alimentação', 'valor': '-18,10 R\$', 'data': '15 de\nnovembro'},
+      {'nome': 'Spotify Premium', 'cat': 'Lazer', 'valor': '-5,20 R\$', 'data': '15 de\nnovembro'},
+      {'nome': 'Aluguel do apartamento', 'cat': 'Moradia', 'valor': '-23,000\nR\$', 'data': '15 de\nnovembro'},
+      {'nome': 'Netflix', 'cat': 'Assinatura', 'valor': '-56,30\nR\$', 'data': '15 de\nnovembro'},
     ];
 
     return Container(
@@ -50,7 +53,7 @@ class GastosCategoria extends StatelessWidget {
                     ),
                   ),
                   Text(item['valor']!, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.right),
-                  const SizedBox(width: 12),
+                   SizedBox(width: 12),
                   Text(item['data']!, style: const TextStyle(color: Colors.black54, fontSize: 10), textAlign: TextAlign.right),
                 ],
               ),

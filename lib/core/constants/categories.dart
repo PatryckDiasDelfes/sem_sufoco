@@ -15,7 +15,7 @@ class CategoriasIcons {
   static const IconData assinaturas = Symbols.subscriptions;
 }
 
-// Lista pronta pra usar na tela
+
 const List<Category> kCategories = [
   Category(name: 'Alimentação', icon: CategoriasIcons.alimentacao),
   Category(name: 'Transporte', icon: CategoriasIcons.transporte),

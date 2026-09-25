@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/categories.dart';
 
+
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const cardGreen = Color(0xFF1DBA8B);
+    const cardGreen = Color(0xFF009D71);
 
-    // Puxa do seu categories.dart + adiciona as transações do Figma
+    
     final items = [
       {'cat': kCategories[0], 'sub': '15 transações'},
       {'cat': kCategories[1], 'sub': '5 transações'},
@@ -54,12 +55,12 @@ class CategoriesPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(cat.icon, size: 28, color: Colors.black),
+                        Icon(cat.icon, size: 28, color: Colors.white),
                         const SizedBox(height: 8),
                         Text(cat.name,
-                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
+                          style: const TextStyle(color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold, fontSize: 13)),
                         if (sub.isNotEmpty)
-                          Text(sub, style: const TextStyle(color: Colors.black87, fontSize: 10)),
+                          Text(sub, style: const TextStyle(color: Color(0xFF0A2E1E), fontSize: 15)),
                       ],
                     ),
                   );
@@ -96,10 +97,10 @@ class _BottomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, size: 26, color: active? Colors.white : Colors.black),
+        Icon(icon, size: 26, color: active? Colors.white : Color(0xFFFFFFFF)),
         const SizedBox(height: 2),
         Text(label,
-          style: TextStyle(color: active? Colors.white : Colors.black, fontSize: 11, fontWeight: FontWeight.w600)),
+          style: TextStyle(color: active? Colors.white : Color(0xFFFFFFFF), fontSize: 11, fontWeight: FontWeight.w900)),
       ],
     );
   }

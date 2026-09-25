@@ -9,4 +9,5 @@ class AppColors {
   static const Color tertiary = Color(0xFF98FFE0);
   static const Color white = Color(0xFFFFFFFF);
   static const Color gray200 = Color(0xFFE5E5E5);
+  static const Color darkGreen = Color(0xFF0A2E1E);
 }

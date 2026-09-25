@@ -118,6 +118,28 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
+                      const SizedBox(height: 20),
+
+                      ElevatedButton(
+                        onPressed: () {
+                          context.push('/TransactionPage');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.black,
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        child: const Text(
+                          'Teste',
+                          style: AppTextStyle.headingSmall,
+                        ),
+                      ),
+
                       const SizedBox(height: 40),
 
                       Row(

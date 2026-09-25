@@ -168,16 +168,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           const SizedBox(height: 20),
-
-          Center(
-            child: Text(
-              'Versão 1.0.0',
-              style: TextStyle(
-                color: AppColors.textMuted.withValues(alpha: 0.6),
-                fontSize: 11,
-              ),
-            ),
-          ),
         ],
       ),
     );

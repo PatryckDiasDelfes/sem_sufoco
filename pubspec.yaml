@@ -39,6 +39,7 @@ dependencies:
   go_router: ^18.0.1
   provider: ^6.1.5+1
   intl: ^0.20.2
+  fl_chart: ^1.2.0
   
 
 dev_dependencies:

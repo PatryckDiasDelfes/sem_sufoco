@@ -8,20 +8,31 @@ class AppExtractHead extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16.0, right: 16, top: 16, bottom: 4),
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16, bottom: 4),
       child: Row(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(right: 8.0),
             child: AppIconStackUpGraphic(),
           ),
-          Text('Movimentações', style: AppTextStyle.homeText),
-          Spacer(flex: 1),
-          Text('Adicionar', style: AppTextStyle.homeTextGren),
-          Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Icon(Icons.add_circle, color: AppColors.grenLive, size: 15),
+          const Text('Movimentações', style: AppTextStyle.homeText),
+          const Spacer(flex: 1),
+          GestureDetector(
+            child: const Row(
+              children: [
+                Text('Adicionar', style: AppTextStyle.homeTextGren),
+                Padding(
+                  padding: EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.add_circle,
+                    color: AppColors.grenLive,
+                    size: 15,
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {},
           ),
         ],
       ),

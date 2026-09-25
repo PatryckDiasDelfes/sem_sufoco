@@ -1,10 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/home/widgets/app_bar_custom.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract.dart';
-import 'package:sem_sufoco/features/home/widgets/app_icon_app_bar.dart';
-import 'package:sem_sufoco/features/home/widgets/app_title_app_bar.dart';
+import 'package:sem_sufoco/features/home/widgets/app_graphic.dart';
 import 'package:sem_sufoco/features/home/widgets/card_category_setion.dart';
 
 class HomePage extends StatelessWidget {
@@ -39,6 +39,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  child: AppGraphic(),
                 ),
 
                 const Text('Categorias', style: AppTextStyle.subTitle),
@@ -46,35 +47,32 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 100, child: CardCategorySetion()),
 
                 const AppExtract(),
-
-                // SizedBox(
-                //   height: 100,
-                //   child: ListView(
-                //     scrollDirection: Axis.horizontal,
-                //     children: [
-                //       Padding(
-                //         padding: const EdgeInsets.symmetric(vertical: 4),
-                //         child: Container(
-                //           width: 110,
-                //           decoration: BoxDecoration(
-                //             color: AppColors.bg,
-                //             borderRadius: BorderRadius.circular(10),
-                //             boxShadow: const [
-                //               BoxShadow(
-                //                 color: AppColors.shodownBox,
-                //                 blurRadius: 4,
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: 1,
+        backgroundColor: AppColors.backGround,
+
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Início',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.search),
+            icon: Icon(Icons.search_outlined),
+            label: 'Buscar',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
+          ),
+        ],
       ),
     );
   }

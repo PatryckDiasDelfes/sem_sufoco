@@ -34,33 +34,42 @@ class AppExtract extends StatelessWidget {
           ),
         ),
 
-        child: const Column(
+        child: Column(
           children: [
-            AppExtractHead(),
-            AppLine(size: 1.3),
-            AppSpend(
-              name: 'Supermercado',
-              category: 'Alimentação',
-              price: -12,
-              date: '7 de julho',
-              icone: Icon(
-                Icons.shopping_cart_outlined,
-                color: AppColors.tertiary,
+            const AppExtractHead(),
+            const AppLine(size: 1.3),
+            GestureDetector(
+              child: const AppSpend(
+                name: 'Supermercado',
+                category: 'Alimentação',
+                price: -12,
+                date: '7 de julho',
+                icone: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: AppColors.tertiary,
+                ),
               ),
+              onTap: () {},
             ),
-            AppSpend(
-              name: 'Faculdade',
-              category: 'Estudos',
-              price: -1900,
-              date: '6 de julho',
-              icone: Icon(Icons.school_outlined, color: AppColors.black),
+            GestureDetector(
+              child: const AppSpend(
+                name: 'Faculdade',
+                category: 'Estudos',
+                price: -1900,
+                date: '6 de julho',
+                icone: Icon(Icons.school_outlined, color: AppColors.black),
+              ),
+              onTap: () {},
             ),
-            AppSpend(
-              name: 'Shopping',
-              category: 'Lazer',
-              price: -452,
-              date: '5 de julho',
-              icone: Icon(Icons.mobile_friendly, color: AppColors.red),
+            GestureDetector(
+              child: const AppSpend(
+                name: 'Shopping',
+                category: 'Lazer',
+                price: -452,
+                date: '5 de julho',
+                icone: Icon(Icons.mobile_friendly, color: AppColors.red),
+              ),
+              onTap: () {},
             ),
           ],
         ),

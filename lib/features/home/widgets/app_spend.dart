@@ -24,7 +24,7 @@ class AppSpend extends StatelessWidget {
   Widget build(BuildContext context) {
     Utils utils = Utils();
     return Padding(
-      padding: const EdgeInsets.only(left: 24.0, right: 16),
+      padding: const EdgeInsets.only(left: 16.0, right: 16),
       child: SizedBox(
         height: 50,
         child: Row(
@@ -35,7 +35,7 @@ class AppSpend extends StatelessWidget {
               width: 50,
               decoration: BoxDecoration(
                 color: AppColors.cardGreen,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: icone,
             ),
@@ -62,13 +62,13 @@ class AppSpend extends StatelessWidget {
                         children: [
                           Text(
                             utils.formatCurrency(price),
-                            style: AppTextStyle.homeValue,
+                            style: AppTextStyle.homePriceRed,
                           ),
                           Text(date, style: AppTextStyle.extrectSub),
                         ],
                       ),
 
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(left: 16.0),
                         child: Icon(Icons.arrow_forward_ios, size: 15),
                       ),

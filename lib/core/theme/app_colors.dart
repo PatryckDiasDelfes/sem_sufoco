@@ -16,4 +16,10 @@ class AppColors {
   static const Color bg = Color(0xFF0F2E27);
   static const Color grenLive = Color.fromARGB(255, 80, 250, 32);
   static const Color red = Colors.red;
+  static const Color purple = Colors.purple;
+  static const Color yellow = Colors.yellow;
+  static const Color blue = Colors.blue;
+  static const Color pink = Colors.pink;
+
+  static const Color backGround = Color.fromARGB(255, 1, 28, 22);
 }

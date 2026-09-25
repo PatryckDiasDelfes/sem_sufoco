@@ -10,8 +10,18 @@ class AppLine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 1,
-      color: AppColors.cardGreen,
+
       width: MediaQuery.of(context).size.width / size,
+      decoration: const BoxDecoration(
+        color: AppColors.cardGreen,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shodownBox,
+            blurRadius: 20, // O desfoque da sombra
+            spreadRadius: 0.5, // O quanto a sombra se espalha
+          ),
+        ],
+      ),
     );
   }
 }

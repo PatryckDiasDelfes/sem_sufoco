@@ -47,8 +47,24 @@ class AppTextStyle {
     color: AppColors.gray100,
     fontSize: 10,
   );
-  static const TextStyle homeValue = TextStyle(
+  static const TextStyle homePriceRed = TextStyle(
     color: AppColors.red,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle homePriceWhite = TextStyle(
+    color: AppColors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle AppBartitle = TextStyle(
+    color: AppColors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle AppBarsubTitle = TextStyle(
+    color: AppColors.gray100,
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );

@@ -1,11 +1,10 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/home/widgets/app_bar_custom.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract.dart';
 import 'package:sem_sufoco/features/home/widgets/app_graphic.dart';
-import 'package:sem_sufoco/features/home/widgets/card_category_setion.dart';
+import 'package:sem_sufoco/features/categorie/widget/card_category_setion.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

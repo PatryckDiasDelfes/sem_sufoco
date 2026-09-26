@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract_head.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
@@ -49,7 +50,9 @@ class AppExtract extends StatelessWidget {
                   color: AppColors.tertiary,
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                context.push('/ReleaseDetailsPage');
+              },
             ),
             GestureDetector(
               child: const AppSpend(
@@ -59,7 +62,9 @@ class AppExtract extends StatelessWidget {
                 date: '6 de julho',
                 icone: Icon(Icons.school_outlined, color: AppColors.black),
               ),
-              onTap: () {},
+              onTap: () {
+                context.push('/ReleaseDetailsPage');
+              },
             ),
             GestureDetector(
               child: const AppSpend(
@@ -69,7 +74,9 @@ class AppExtract extends StatelessWidget {
                 date: '5 de julho',
                 icone: Icon(Icons.mobile_friendly, color: AppColors.red),
               ),
-              onTap: () {},
+              onTap: () {
+                context.push('/ReleaseDetailsPage');
+              },
             ),
           ],
         ),

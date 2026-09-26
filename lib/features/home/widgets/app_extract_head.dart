@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/home/widgets/app_icon_stack_up_graphic.dart';
@@ -32,7 +33,9 @@ class AppExtractHead extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () {},
+            onTap: () {
+              context.push('/TransactionPage');
+            },
           ),
         ],
       ),

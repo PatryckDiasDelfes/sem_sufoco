@@ -100,7 +100,7 @@ class LoginPageState extends State<LoginPage> {
 
                       ElevatedButton(
                         onPressed: () {
-                          context.push('/ReleaseDetailsPage');
+                          context.push('/HomePage');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

@@ -17,8 +17,17 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle bodySmall = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+  );
+  static const TextStyle inputLabel = TextStyle(
+    color: AppColors.gray200,
+    fontSize: 15,
+  );
+
   static const TextStyle subTitle = TextStyle(
-    color: AppColors.black,
+    color: AppColors.white,
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
@@ -32,4 +41,40 @@ class AppTextStyle {
   static const TextStyle buttonLabel = TextStyle(color: AppColors.white);
 
   static TextStyle? get smallBlack => null;
+
+  static const TextStyle homeText = TextStyle(
+    color: AppColors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle homeTextGren = TextStyle(
+    color: AppColors.grenLive,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle extrectSub = TextStyle(
+    color: AppColors.gray100,
+    fontSize: 10,
+  );
+  static const TextStyle homePriceRed = TextStyle(
+    color: AppColors.red,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle homePriceWhite = TextStyle(
+    color: AppColors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle AppBartitle = TextStyle(
+    color: AppColors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle AppBarsubTitle = TextStyle(
+    color: AppColors.gray100,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
 }

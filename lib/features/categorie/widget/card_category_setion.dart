@@ -13,7 +13,7 @@ class CardCategorySetion extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            context.push('/GastosCategoria');
+            context.push('/CategoriesPage');
           },
           child: const AppCardCategory(
             category: 'Alimentação',
@@ -24,7 +24,7 @@ class CardCategorySetion extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            context.push('/GastosCategoria');
+            context.push('/CategoriesPage');
           },
           child: const AppCardCategory(
             category: 'Lazer',
@@ -35,7 +35,7 @@ class CardCategorySetion extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            context.push('/GastosCategoria');
+            context.push('/CategoriesPage');
           },
           child: const AppCardCategory(
             category: 'Estudos',
@@ -46,7 +46,7 @@ class CardCategorySetion extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            context.push('/GastosCategoria');
+            context.push('/CategoriesPage');
           },
           child: const AppCardCategory(
             category: 'Moradia',

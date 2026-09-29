@@ -47,7 +47,8 @@ class CategoriesPage extends StatelessWidget {
                   final Category cat = items[index]['cat'] as Category;
                   final String sub = items[index]['sub'] as String;
                   return InkWell(
-                    onTap: () => context.push('/gastos-categoria', extra: cat),
+                    onTap: () =>
+                        context.push('/CategoryExtractPage', extra: cat),
                     child: Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFF0A2E1E),

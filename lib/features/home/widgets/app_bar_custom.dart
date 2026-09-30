@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/home/widgets/app_icon_app_bar.dart';
 import 'package:sem_sufoco/features/home/widgets/app_title_app_bar.dart';
@@ -14,6 +13,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.backGround,
       title: AppTitleAppBar(userName: userName),
+      automaticallyImplyLeading: false,
       centerTitle: false,
       actions: [
         AppIconAppBar(

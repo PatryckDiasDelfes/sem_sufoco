@@ -9,6 +9,26 @@ class AppGraphic extends StatelessWidget {
   Widget build(BuildContext context) {
     return BarChart(
       BarChartData(
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              reservedSize: 40,
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                return SideTitleWidget(
+                  meta: meta,
+                  child: Text(
+                    value.toInt().toString(),
+                    style: TextStyle(
+                      color: Colors.white, // ---> Cor dos números do eixo X
+                      fontSize: 12,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
         barGroups: [
           RodsGroup([Rods(), Rods(), Rods()]),
           BarChartGroupData(
@@ -31,11 +51,18 @@ class AppGraphic extends StatelessWidget {
   BarChartRodData Rods() {
     return BarChartRodData(
       toY: 100,
-      color: AppColors.pink,
+      gradient: LinearGradient(
+        colors: [AppColors.pink, AppColors.pink.withOpacity(0.5)],
+      ),
       width: 20,
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(8),
         topRight: Radius.circular(8),
+      ),
+      backDrawRodData: BackgroundBarChartRodData(
+        show: true,
+        toY: 200,
+        color: AppColors.white.withOpacity(0.2),
       ),
     );
   }

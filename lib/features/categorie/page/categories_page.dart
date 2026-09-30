@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:sem_sufoco/shared/widgets/app_navigator_bar.dart';
 import '../../../core/constants/categories.dart';
 import 'package:go_router/go_router.dart';
 
@@ -86,24 +87,9 @@ class CategoriesPage extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            color: const Color(0xFF0A2E1E),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _BottomItem(icon: Symbols.home, label: 'Início', active: true),
-                _BottomItem(icon: Symbols.add_circle, label: 'Novo'),
-                _BottomItem(icon: Symbols.flag, label: 'Metas'),
-                _BottomItem(
-                  icon: Symbols.account_balance_wallet,
-                  label: 'Cashback',
-                ),
-              ],
-            ),
-          ),
         ],
       ),
+      bottomNavigationBar: AppNavigatorBar(indexController: 3),
     );
   }
 }

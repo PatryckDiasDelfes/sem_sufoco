@@ -1,10 +1,13 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/home/widgets/app_bar_custom.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract.dart';
 import 'package:sem_sufoco/features/home/widgets/app_graphic.dart';
 import 'package:sem_sufoco/features/categorie/widget/card_category_setion.dart';
+import 'package:sem_sufoco/shared/widgets/app_navigator_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,6 +19,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: AppColors.backGround,
       appBar: AppBarCustom(userName: userName),
       extendBodyBehindAppBar: false,
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -41,7 +46,7 @@ class HomePage extends StatelessWidget {
                   child: AppGraphic(),
                 ),
 
-                const Text('Categorias', style: AppTextStyle.subTitle),
+                const Text('olá, Rafael!', style: AppTextStyle.subTitle),
 
                 const SizedBox(height: 100, child: CardCategorySetion()),
 
@@ -51,28 +56,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 1,
-        backgroundColor: AppColors.backGround,
-
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Início',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.search_outlined),
-            label: 'Buscar',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
-      ),
+      bottomNavigationBar: AppNavigatorBar(indexController: 2),
     );
   }
 }

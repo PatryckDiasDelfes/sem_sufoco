@@ -31,7 +31,7 @@ class AppColors {
   static const Color purple = Color(0xFFB18BF7);
   static const Color danger = Color(0xFFFF6B6B);
   static const Color shodownBox = Color(0xFF009D71);
-  static const Color bg = Color(0xFF0F2E27);
+  static const Color bg = Color(0xFF15483E);
   static const Color grenLive = Color.fromARGB(255, 80, 250, 32);
   static const Color red = Colors.red;
   static const Color pink = Colors.pink;

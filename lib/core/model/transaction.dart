@@ -1,7 +1,11 @@
 // =========================
+// Forma de pagamento
+// =========================
+enum PaymentMethod { creditCard, debitCard, pix, cash }
+
+// =========================
 // Model de transação
 // =========================
-
 class Transaction {
   final String id;
   final DateTime purchasedAt;
@@ -21,9 +25,3 @@ class Transaction {
     required this.paymentMethod,
   });
 }
-
-// =========================
-// Forma de pagamento
-// =========================
-
-enum PaymentMethod { creditCard, debitCard, pix, cash }

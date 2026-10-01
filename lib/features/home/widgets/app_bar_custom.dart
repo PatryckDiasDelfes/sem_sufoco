@@ -17,22 +17,11 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       actions: [
         AppIconAppBar(
-          numPadding: 8,
+          numPadding: 20,
           icon: IconButton(
             onPressed: () {},
             icon: const Icon(
               Icons.settings_outlined,
-              color: AppColors.white,
-              size: 20,
-            ),
-          ),
-        ),
-        AppIconAppBar(
-          numPadding: 28,
-          icon: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_none_sharp,
               color: AppColors.white,
               size: 20,
             ),

@@ -25,13 +25,13 @@ class AppCalendarGraphic extends StatelessWidget {
           child: Row(
             spacing: 5,
             children: [
-              Icon(
+              const Icon(
                 Icons.calendar_today_outlined,
                 color: AppColors.white,
                 size: 20,
               ),
-              Text('Julho', style: TextStyle(color: AppColors.white)),
-              Icon(
+              const Text('Julho', style: TextStyle(color: AppColors.white)),
+              const Icon(
                 Icons.arrow_downward_rounded,
                 color: AppColors.white,
                 size: 20,

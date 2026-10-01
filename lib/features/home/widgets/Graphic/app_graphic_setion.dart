@@ -14,6 +14,7 @@ class AppGraphicSetion extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.bg,
+        border: Border.all(color: AppColors.cardGreen, width: 1),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -28,7 +29,7 @@ class AppGraphicSetion extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: 105,
+              height: 103,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

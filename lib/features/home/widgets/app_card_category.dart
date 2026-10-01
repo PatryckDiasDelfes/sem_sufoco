@@ -26,11 +26,12 @@ class AppCardCategory extends StatelessWidget {
         width: 90,
         decoration: BoxDecoration(
           color: AppColors.bg,
+          border: Border.all(color: AppColors.cardGreen, width: 1),
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(
               color: Color.fromARGB(255, 112, 91, 91),
-              blurRadius: 4, // O desfoque da sombra
+              blurRadius: 4, // O desfoque da sombra.
               // O quanto a sombra se espalha
             ),
           ],

@@ -78,18 +78,6 @@ class AppExtract extends StatelessWidget {
                 context.push('/ReleaseDetailsPage');
               },
             ),
-            GestureDetector(
-              child: const AppSpend(
-                name: 'Shopping',
-                category: 'Lazer',
-                price: -452,
-                date: '5 de julho',
-                icone: Icon(Icons.mobile_friendly, color: AppColors.red),
-              ),
-              onTap: () {
-                context.push('/ReleaseDetailsPage');
-              },
-            ),
           ],
         ),
       ),

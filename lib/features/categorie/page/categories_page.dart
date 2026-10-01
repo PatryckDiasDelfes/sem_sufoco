@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sem_sufoco/shared/widgets/app_navigator_bar.dart';
+import 'package:sem_sufoco/shared/widget/app_navigator_bar.dart';
 import '../../../core/constants/categories.dart';
 import 'package:go_router/go_router.dart';
 
@@ -89,7 +89,6 @@ class CategoriesPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: AppNavigatorBar(indexController: 3),
     );
   }
 }

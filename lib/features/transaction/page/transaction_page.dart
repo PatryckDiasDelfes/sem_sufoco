@@ -7,7 +7,7 @@ import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/transaction/widget/category.dart';
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
 import 'package:sem_sufoco/shared/widget/elevated_botton.dart';
-import 'package:sem_sufoco/shared/widgets/app_navigator_bar.dart';
+import 'package:sem_sufoco/shared/widget/app_navigator_bar.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});
@@ -225,7 +225,6 @@ class TransactionPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: AppNavigatorBar(indexController: 1),
     );
   }
 }

@@ -1,23 +1,23 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 class AppNavigatorBar extends StatefulWidget {
-  const AppNavigatorBar({super.key, required this.indexController});
+  const AppNavigatorBar({super.key, required this.pageController});
 
-  final int indexController;
+  final PageController pageController;
 
   @override
   State<AppNavigatorBar> createState() => _AppNavigatorBarState();
 }
 
 class _AppNavigatorBarState extends State<AppNavigatorBar> {
+  final NotchBottomBarController controller = NotchBottomBarController(
+    index: 1,
+  );
+
   @override
   Widget build(BuildContext context) {
-    final NotchBottomBarController controller = NotchBottomBarController(
-      index: widget.indexController,
-    );
     return AnimatedNotchBottomBar(
       showShadow: true,
       shadowElevation: 5,
@@ -54,17 +54,7 @@ class _AppNavigatorBarState extends State<AppNavigatorBar> {
         ),
       ],
       onTap: (index) {
-        if (index == 1) {
-          context.go('/HomePage');
-        }
-
-        if (index == 2) {
-          context.go('/TransactionPage');
-        }
-
-        if (index == 3) {
-          context.go('/CategoriesPage');
-        }
+        widget.pageController.jumpToPage(index);
       },
     );
   }

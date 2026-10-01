@@ -1,0 +1,109 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:sem_sufoco/core/theme/app_colors.dart';
+import 'package:sem_sufoco/utils.dart';
+
+class AppGraphic extends StatelessWidget {
+  const AppGraphic({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BarChart(
+      BarChartData(
+        minY: 0,
+        maxY: 600,
+        alignment: BarChartAlignment.start,
+        borderData: FlBorderData(
+          show: true,
+          border: const Border(
+            top: BorderSide.none,
+            left: BorderSide(color: AppColors.grenLive),
+            bottom: BorderSide(color: AppColors.grenLive),
+          ),
+        ),
+        gridData: FlGridData(
+          horizontalInterval: 150,
+          show: true,
+          drawHorizontalLine: true,
+          drawVerticalLine: false,
+
+          getDrawingHorizontalLine: (value) {
+            return const FlLine(color: AppColors.gray100, strokeWidth: 1);
+          },
+        ),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              reservedSize: 60,
+              showTitles: true,
+              interval: 100,
+
+              getTitlesWidget: (value, meta) {
+                return SideTitleWidget(
+                  meta: meta,
+                  child: Text(
+                    Utils().formatCurrencyNoDouble(value),
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 9,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 30,
+              getTitlesWidget: (value, meta) {
+                return SideTitleWidget(
+                  meta: meta,
+                  child: Text(
+                    value.toInt().toString(),
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        barGroups: [
+          RodsGroup([Rods(100), Rods(500), Rods(400)], 0),
+          RodsGroup([Rods(100), Rods(500), Rods(400)], 5),
+          RodsGroup([Rods(100), Rods(400), Rods(500)], 10),
+          RodsGroup([Rods(100), Rods(400), Rods(500)], 15),
+          RodsGroup([Rods(100), Rods(100), Rods(500)], 20),
+          RodsGroup([Rods(500), Rods(500), Rods(500)], 25),
+          RodsGroup([Rods(400), Rods(400), Rods(400)], 30),
+        ],
+      ),
+    );
+  }
+
+  BarChartGroupData RodsGroup(List<BarChartRodData> barRods, numMes) =>
+      BarChartGroupData(x: numMes, barsSpace: 2, barRods: barRods);
+
+  BarChartRodData Rods(double numMoney) {
+    return BarChartRodData(
+      toY: numMoney,
+      color: AppColors.accent,
+      width: 10,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(2),
+        topRight: Radius.circular(2),
+      ),
+    );
+  }
+}

@@ -36,6 +36,14 @@ class AppCalendarGraphic extends StatelessWidget {
                 color: AppColors.white,
                 size: 20,
               ),
+              // DropdownButton<String>(
+              //   value: 'Opção 1',
+              //   items: const [
+              //     DropdownMenuItem(child: Text('OLA')),
+              //     DropdownMenuItem(child: Text('OLA'), value: 'Opção 2'),
+              //   ],
+              //   onChanged: (value) {},
+              // ),
             ],
           ),
         ),

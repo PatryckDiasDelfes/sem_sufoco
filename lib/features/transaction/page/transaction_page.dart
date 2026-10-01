@@ -28,6 +28,19 @@ class _TransactionPageState extends State<TransactionPage> {
 
   final TextEditingController descriptionController = TextEditingController();
 
+  Future<void> _selectDate() async {
+    await showDatePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now(),
+    );
+  }
+
+  Future<void> _selectTime() async {
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  }
+
   @override
   void dispose() {
     establishmentController.dispose();
@@ -117,25 +130,19 @@ class _TransactionPageState extends State<TransactionPage> {
                             children: [
                               Expanded(
                                 child: TransactionInfoField(
-                                  labelTitle: 'Data da transação',
+                                  labelTitle: 'Data',
                                   icon: Icons.calendar_today_outlined,
                                   readOnly: true,
-                                  onTap: () {
-                                    // selecionar data
-                                  },
+                                  onTap: _selectDate,
                                 ),
                               ),
-
                               const SizedBox(width: 12),
-
                               Expanded(
                                 child: TransactionInfoField(
                                   labelTitle: 'Horário',
                                   icon: Icons.access_time,
                                   readOnly: true,
-                                  onTap: () {
-                                    // selecionar horário
-                                  },
+                                  onTap: _selectTime,
                                 ),
                               ),
                             ],

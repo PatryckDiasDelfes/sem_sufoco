@@ -22,9 +22,18 @@ class CategorySelector extends StatefulWidget {
 class _CategorySelectorState extends State<CategorySelector> {
   String? selectedCategoryId;
 
+  void _selectCategory(Category category) {
+    setState(() => selectedCategoryId = category.id);
+    widget.onSelected?.call(category);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final categories = widget.categories.take(3).toList();
+    final visibleCategories = widget.categories.take(3).toList();
+
+    final selected = widget.categories
+        .where((category) => category.id == selectedCategoryId)
+        .firstOrNull;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,77 +41,86 @@ class _CategorySelectorState extends State<CategorySelector> {
         Row(
           children: [
             const Text('Categorias', style: AppTextStyle.subTitle),
-
             const Spacer(),
-
             IconButton(
-              onPressed: () =>
-                  AllCategoriesSheet(context, categories: widget.categories),
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                backgroundColor: AppColors.background,
+                isScrollControlled: true,
+                builder: (_) => AllCategoriesSheet(
+                  categories: widget.categories,
+                  selectedCategoryId: selectedCategoryId,
+                  onSelected: _selectCategory,
+                ),
+              ),
               icon: const Icon(Icons.more_horiz, color: Colors.white),
             ),
           ],
         ),
-
         const SizedBox(height: 10),
-
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: categories.length,
+          itemCount: visibleCategories.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             childAspectRatio: 1.05,
           ),
-          itemBuilder: (context, index) {
-            final category = categories[index];
+          itemBuilder: (_, index) {
+            final category = visibleCategories[index];
 
-            return _card(
-              icon: category.icon,
-              name: category.name,
-              selected: selectedCategoryId == category.id,
-              onTap: () {
-                setState(() {
-                  selectedCategoryId = category.id;
-                });
-
-                widget.onSelected?.call(category);
-              },
-            );
+            return _card(category, selected: category.id == selectedCategoryId);
           },
         ),
+        if (selected != null) ...[
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Icon(Icons.check_circle, size: 18, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                'Categoria selecionada: ',
+                style: AppTextStyle.bodySmall.copyWith(color: Colors.grey),
+              ),
+              Expanded(
+                child: Text(
+                  selected.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.bodySmall.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }
 
-  Widget _card({
-    required IconData icon,
-    required String name,
-    required VoidCallback onTap,
-    bool selected = false,
-  }) {
+  Widget _card(Category category, {bool selected = false}) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
+      onTap: () => _selectCategory(category),
       child: Container(
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.blue,
+          color: selected ? AppColors.primary : AppColors.backGround,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              icon,
+              category.icon,
               size: 26,
               color: selected ? Colors.white : AppColors.primary,
             ),
-
             const SizedBox(height: 7),
-
             Text(
-              name,
+              category.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12, color: Colors.white),

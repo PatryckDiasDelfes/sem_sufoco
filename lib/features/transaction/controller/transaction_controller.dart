@@ -101,4 +101,9 @@ class TransactionController extends ChangeNotifier {
       return null;
     }
   }
+  List<Transaction> getTransactionsByCategoryId(String categoryId) {
+  return _transactions.where((t) => t.categoryId == categoryId).toList();
 }
+  //===============
+  //Buscar Transações por categoria
+  //================

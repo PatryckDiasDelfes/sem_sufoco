@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 class AppNavigatorBar extends StatefulWidget {
-  const AppNavigatorBar({super.key, required this.pageController});
+  const AppNavigatorBar({
+    super.key,
+    required this.pageController,
+    required this.controller,
+  });
 
   final PageController pageController;
+  final NotchBottomBarController controller;
 
   @override
   State<AppNavigatorBar> createState() => _AppNavigatorBarState();
 }
 
 class _AppNavigatorBarState extends State<AppNavigatorBar> {
-  final NotchBottomBarController controller = NotchBottomBarController(
-    index: 1,
-  );
-
   @override
   Widget build(BuildContext context) {
     return AnimatedNotchBottomBar(
@@ -34,7 +35,7 @@ class _AppNavigatorBarState extends State<AppNavigatorBar> {
 
       durationInMilliSeconds: 300,
 
-      notchBottomBarController: controller,
+      notchBottomBarController: widget.controller,
 
       bottomBarItems: const [
         BottomBarItem(
@@ -54,6 +55,7 @@ class _AppNavigatorBarState extends State<AppNavigatorBar> {
         ),
       ],
       onTap: (index) {
+        widget.controller.index = index;
         widget.pageController.jumpToPage(index);
       },
     );

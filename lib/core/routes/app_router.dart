@@ -60,7 +60,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/MainHomePage',
       builder: (context, state) {
-        return HomePageSetion();
+        return const HomePageSetion();
       },
     ),
   ],

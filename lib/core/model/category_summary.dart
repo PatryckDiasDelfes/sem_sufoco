@@ -1,4 +1,4 @@
-import '../constants/categories.dart';
+import 'package:sem_sufoco/core/model/category.dart';
 
 class CategorySummary {
   final Category category;

@@ -6,6 +6,7 @@ import 'package:sem_sufoco/features/home/widgets/Graphic/app_graphic_setion.dart
 import 'package:sem_sufoco/features/home/widgets/app_bar_custom.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract.dart';
 import 'package:sem_sufoco/features/categorie/widget/card_category_setion.dart';
+import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({this.pageController, this.controller, super.key});
@@ -34,7 +35,13 @@ class HomePage extends StatelessWidget {
 
                 const Text('Categorias', style: AppTextStyle.subTitle),
 
-                const SizedBox(height: 100, child: CardCategorySetion()),
+                SizedBox(
+                  height: 100,
+                  child: CardCategorySetion(
+                    categories: mockCategories,
+                    limit: 4,
+                  ),
+                ),
 
                 AppExtract(
                   pageController: pageController!,

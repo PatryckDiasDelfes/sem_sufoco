@@ -16,4 +16,14 @@ final List<Category> mockCategories = [
   Category(id: 'education', name: 'Educação', icon: Icons.school_outlined),
   Category(id: 'other', name: 'Outros', icon: Icons.more_horiz_outlined),
   Category(id: 'pets', name: 'Pets', icon: Icons.pets_outlined),
+
+  // =========================
+  // Recebimentos
+  // =========================
+  Category(
+    id: 'salary',
+    name: 'Salário',
+    icon: Icons.account_balance_wallet_outlined,
+  ),
+  Category(id: 'freelance', name: 'Freela', icon: Icons.work_outline),
 ];

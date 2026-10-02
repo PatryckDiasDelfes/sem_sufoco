@@ -77,4 +77,10 @@ class AppTextStyle {
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+
+  static const TextStyle title = TextStyle(
+    color: AppColors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
 }

@@ -9,6 +9,7 @@ import 'package:sem_sufoco/features/transaction/widget/category_selector.dart';
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
 import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 import 'package:sem_sufoco/shared/widget/elevated_botton.dart';
+import 'package:sem_sufoco/shared/widget/app_navigator_bar.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});

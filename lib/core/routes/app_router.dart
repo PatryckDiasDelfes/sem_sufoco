@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/features/categorie/page/Category_Extract_page.dart';
 import 'package:sem_sufoco/features/categorie/page/categories_page.dart';
 import 'package:sem_sufoco/features/home/pages/home_page.dart';
+import 'package:sem_sufoco/features/home/pages/home_page_setion.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
 import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
 import 'package:sem_sufoco/features/settings/page/settings_page.dart';
@@ -54,6 +55,12 @@ final GoRouter appRouter = GoRouter(
       path: '/SettingsPage',
       builder: (context, state) {
         return const SettingsPage();
+      },
+    ),
+    GoRoute(
+      path: '/MainHomePage',
+      builder: (context, state) {
+        return const HomePageSetion();
       },
     ),
   ],

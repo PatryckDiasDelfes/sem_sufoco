@@ -122,7 +122,7 @@ class LoginPageState extends State<LoginPage> {
 
                       ElevatedButton(
                         onPressed: () {
-                          context.push('/TransactionPage');
+                          context.push('/extract');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

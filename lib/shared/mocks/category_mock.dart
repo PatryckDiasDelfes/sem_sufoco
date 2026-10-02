@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 
-final List<Map<String, dynamic>> mockCategories = [
-  {'id': 'food', 'name': 'Alimentação', 'icon': Icons.restaurant_outlined},
-  {'id': 'housing', 'name': 'Moradia', 'icon': Icons.home_outlined},
-  {
-    'id': 'transport',
-    'name': 'Transporte',
-    'icon': Icons.directions_car_outlined,
-  },
-  {'id': 'health', 'name': 'Saúde', 'icon': Icons.health_and_safety_outlined},
-  {'id': 'leisure', 'name': 'Lazer', 'icon': Icons.sports_esports_outlined},
-  {'id': 'shopping', 'name': 'Compras', 'icon': Icons.shopping_bag_outlined},
-  {'id': 'education', 'name': 'Educação', 'icon': Icons.school_outlined},
-  {'id': 'other', 'name': 'Outros', 'icon': Icons.more_horiz_outlined},
+import '../../core/model/category.dart';
+
+final List<Category> mockCategories = [
+  Category(id: 'food', name: 'Alimentação', icon: Icons.restaurant_outlined),
+  Category(id: 'housing', name: 'Moradia', icon: Icons.home_outlined),
+  Category(
+    id: 'transport',
+    name: 'Transporte',
+    icon: Icons.directions_car_outlined,
+  ),
+  Category(id: 'health', name: 'Saúde', icon: Icons.health_and_safety_outlined),
+  Category(id: 'leisure', name: 'Lazer', icon: Icons.sports_esports_outlined),
+  Category(id: 'shopping', name: 'Compras', icon: Icons.shopping_bag_outlined),
+  Category(id: 'education', name: 'Educação', icon: Icons.school_outlined),
+  Category(id: 'other', name: 'Outros', icon: Icons.more_horiz_outlined),
+  Category(id: 'pets', name: 'Pets', icon: Icons.pets_outlined),
+
+  // =========================
+  // Recebimentos
+  // =========================
+  Category(
+    id: 'salary',
+    name: 'Salário',
+    icon: Icons.account_balance_wallet_outlined,
+  ),
+  Category(id: 'freelance', name: 'Freela', icon: Icons.work_outline),
 ];

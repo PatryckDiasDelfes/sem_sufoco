@@ -16,7 +16,29 @@ class TransactionController extends ChangeNotifier {
   String categoriaId = '';
   String formaPagamento = 'credito';
   bool isLoading = false;
-
+// =========================
+// DATA TRANSAÇÃO E HORA
+//========================
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+ 
+  void setDate(DateTime date) {
+    selectedDate = date;
+    notifyListeners();
+  }
+  void setTime(TimeOfDay time) {
+    selectedTime = time;
+    notifyListeners();
+  }
+  DateTime get dataHoraCompleta {
+    return DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
+  }
   void setCategoria(String id) {
     categoriaId = id;
     notifyListeners();
@@ -107,3 +129,4 @@ class TransactionController extends ChangeNotifier {
   //===============
   //Buscar Transações por categoria
   //================
+}

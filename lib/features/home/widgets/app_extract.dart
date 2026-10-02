@@ -7,14 +7,10 @@ import 'package:sem_sufoco/features/home/widgets/app_line.dart';
 import 'package:sem_sufoco/features/home/widgets/app_spend.dart';
 
 class AppExtract extends StatelessWidget {
-  AppExtract({
-    super.key,
-    required this.pageController,
-    required this.controller,
-  });
+  AppExtract({super.key, this.pageController, this.controller});
 
-  final PageController pageController;
-  final NotchBottomBarController controller;
+  final PageController? pageController;
+  final NotchBottomBarController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +42,8 @@ class AppExtract extends StatelessWidget {
         child: Column(
           children: [
             AppExtractHead(
-              controller: controller,
-              pageController: pageController,
+              controller: controller!,
+              pageController: pageController!,
             ),
             const AppLine(size: 1.3),
             GestureDetector(

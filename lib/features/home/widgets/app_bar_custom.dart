@@ -19,7 +19,9 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
         AppIconAppBar(
           numPadding: 20,
           icon: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push('/SettingsPage');
+            },
             icon: const Icon(
               Icons.settings_outlined,
               color: AppColors.white,

@@ -1,229 +1,261 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
-import 'package:sem_sufoco/features/transaction/widget/category.dart';
+import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
+import 'package:sem_sufoco/features/transaction/widget/category_selector.dart';
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
+import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 import 'package:sem_sufoco/shared/widget/elevated_botton.dart';
 import 'package:sem_sufoco/shared/widget/app_navigator_bar.dart';
 
-class TransactionPage extends StatelessWidget {
+class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
 
   @override
+  State<TransactionPage> createState() => _TransactionPageState();
+}
+
+class _TransactionPageState extends State<TransactionPage> {
+  final TextEditingController establishmentController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    establishmentController.dispose();
+    amountController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+String _formatDate(DateTime date) {
+  return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+}
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-
-      // ============================================================
-      // APP BAR
-      // ============================================================
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-        ),
-        title: const Text(
-          'Novo lançamento',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-        actions: const [
-          Icon(Icons.camera_outlined, color: Color(0xFF00BFA5)),
-          SizedBox(width: 16),
-        ],
-      ),
-
-      // ============================================================
-      // CONTEÚDO
-      // ============================================================
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          //   decoration: BoxDecoration(
-          //     color: const Color(0xFF0A2B20),
-          //     borderRadius: BorderRadius.circular(20),
-          //     border: Border.all(color: const Color(0xFF124231)),
-          //   ),
-          //   child: const Row(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       Icon(Icons.restaurant, color: Color(0xFF00BFA5), size: 18),
-          //       SizedBox(width: 8),
-          //       Text(
-          //         'Alimentação',
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 14,
-          //           fontWeight: FontWeight.w500,
-          //         ),
-          //       ),
-          //       SizedBox(width: 8),
-          //       Icon(Icons.edit_outlined, color: Color(0xFF00BFA5), size: 18),
-          //     ],
-          //   ),
-          // ),
-
-          // ========================================================
-          // CARD - SOBRE A TRANSAÇÃO
-          // ========================================================
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.all(20),
-
-            decoration: BoxDecoration(
-              color: const Color(0xFF111E18),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF1B3026)),
+    return ChangeNotifierProvider(
+      create: (_) => TransactionController(),
+      child: Consumer<TransactionController>(
+        builder: (context, controller, child) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () => context.pop(),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+              ),
+              title: const Text('Novo lançamento',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+              centerTitle: true,
+              actions: const [
+                Icon(Icons.camera_outlined, color: Color(0xFF00BFA5)),
+                SizedBox(width: 16),
+              ],
             ),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            body: Column(
               children: [
-                // ==================================================
-                // TÍTULO
-                // ==================================================
-                Text(
-                  'Sobre a transação',
-                  style: AppTextStyle.bodySmall.copyWith(
-                    color: AppColors.white,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // ==================================================
-                // DATA
-                // ==================================================
-                TransactionInfoField(
-                  labelTitle: 'Data da transação',
-                  icon: Icons.calendar_today_outlined,
-                  onTap: () {},
-                ),
-
                 const SizedBox(height: 16),
-
-                // ==================================================
-                // HORÁRIO
-                // ==================================================
-                const TransactionInfoField(
-                  labelTitle: 'Horário',
-                  icon: Icons.access_time,
-                ),
-
-                const SizedBox(height: 16),
-
-                // ==================================================
-                // ESTABELECIMENTO
-                // ==================================================
-                const TransactionInfoField(
-                  labelTitle: 'Estabelecimento',
-                  icon: Icons.storefront_outlined,
-                ),
-
-                const SizedBox(height: 24),
-
-                // ==================================================
-                // VALOR
-                // ==================================================
-                const TransactionInfoField(
-                  labelTitle: '0,00',
-                  icon: Icons.attach_money,
-                ),
-
-                const SizedBox(height: 24),
-
-                // ==================================================
-                // DIVISOR
-                // ==================================================
-                const Divider(color: Color(0xFF1B3026)),
-
-                const SizedBox(height: 16),
-
-                // ==================================================
-                // DESCRIÇÃO
-                // ==================================================
-                GestureDetector(
-                  onTap: () {
-                    // Ação ao clicar
-                    print('Funciona ai lek');
-                  },
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.receipt_long_outlined,
-                        color: Color(0xFF00BFA5),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111E18),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF1B3026)),
                       ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          'Adicionar descrição',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Sobre a transação',
+                              style: AppTextStyle.bodySmall.copyWith(color: AppColors.white)),
+                          const SizedBox(height: 24),
+                        Row(
+  children: [
+    Expanded(
+      child: TransactionInfoField(
+        labelTitle: _formatDate(controller.selectedDate),
+        icon: Icons.calendar_today_outlined,
+        readOnly: true,
+        onTap: () async {
+          final picked = await showDatePicker(
+            context: context,
+            
+            initialDate: controller.selectedDate,
+            firstDate: DateTime(2020),
+            lastDate: DateTime.now(),
+          );
+          if (picked != null) {
+            controller.setDate(picked);
+          }
+        },
+      ),
+    ),
+    const SizedBox(width: 12),
+    Expanded(
+      child: TransactionInfoField(
+        labelTitle: controller.selectedTime.format(context),
+        icon: Icons.access_time,
+        readOnly: true,
+        onTap: () async {
+          final picked = await showTimePicker(
+            context: context,
+            initialTime: controller.selectedTime,
+          );
+          if (picked != null) {
+            controller.setTime(picked);
+          }
+        },
+      ),
+    ),
+  ],
+),
+                          const SizedBox(height: 16),
+                          TransactionInfoField(
+                            labelTitle: 'Estabelecimento',
+                            icon: Icons.storefront_outlined,
+                            controller: establishmentController,
+                            keyboardType: TextInputType.text,
                           ),
-                        ),
+                          const SizedBox(height: 24),
+                          TransactionInfoField(
+                            labelTitle: '0,00',
+                            icon: Icons.attach_money,
+                            controller: amountController,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          ),
+                          const SizedBox(height: 24),
+                          const Divider(color: Color(0xFF1B3026)),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: descriptionController,
+                            style: const TextStyle(color: Colors.white, fontSize: 14),
+                            cursorColor: AppColors.colorsTheme,
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              prefixIcon: Padding(
+                                padding: EdgeInsets.only(bottom: 40),
+                                child: Icon(Icons.receipt_long_outlined, color: Color(0xFF00BFA5)),
+                              ),
+                              hintText: 'Adicionar descrição',
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          CategorySelector(
+                            categories: mockCategories,
+                            onSelected: (category) {
+                              controller.setCategoria(category.id);
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          const Text('Forma de pagamento',
+                              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _PaymentOption(
+                                  icon: Icons.credit_card,
+                                  label: 'Crédito',
+                                  onTap: () => controller.setPagamento('credito'),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: _PaymentOption(
+                                  icon: Icons.account_balance_wallet_outlined,
+                                  label: 'Débito',
+                                  onTap: () => controller.setPagamento('debito'),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _PaymentOption(
+                                  icon: Icons.pix,
+                                  label: 'Pix',
+                                  onTap: () => controller.setPagamento('pix'),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: _PaymentOption(
+                                  icon: Icons.money,
+                                  label: 'Dinheiro',
+                                  onTap: () => controller.setPagamento('dinheiro'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      Icon(Icons.chevron_right, color: Colors.grey),
-                    ],
+                    ),
                   ),
                 ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 110,
-                    viewportFraction: 0.33,
-                    enableInfiniteScroll: true,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: AppElevatedButton(
+                      label: controller.isLoading ? 'Salvando...' : 'Salvar',
+                      type: ButtonType.filled,
+                      backgroundColor: AppColors.colorsTheme,
+                      onPressed: () {
+                        controller.salvarTransacao(
+                          estabelecimento: establishmentController.text,
+                          valor: amountController.text,
+                          descricao: descriptionController.text,
+                        );
+                      },
+                    ),
                   ),
-                  items: const [
-                    Category(
-                      labelTitle: 'Saúde',
-                      icon: Icons.health_and_safety_outlined,
-                    ),
-                    Category(labelTitle: 'Moradia', icon: Icons.home_outlined),
-                    Category(
-                      labelTitle: 'Transporte',
-                      icon: Icons.directions_car_outlined,
-                    ),
-                    Category(
-                      labelTitle: 'Alimentação',
-                      icon: Icons.restaurant_outlined,
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
+          );
+        },
+      ),
+    );
+  }
+}
 
-          Spacer(flex: 2),
+class _PaymentOption extends StatelessWidget {
+  const _PaymentOption({required this.icon, required this.label, required this.onTap});
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
 
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: AppElevatedButton(
-                label: 'Salvar',
-                type: ButtonType.filled,
-                backgroundColor: AppColors.colorsTheme,
-              ),
-            ),
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0A2B20),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF1B3026)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: AppColors.colorsTheme, size: 22),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
+          ],
+        ),
       ),
     );
   }

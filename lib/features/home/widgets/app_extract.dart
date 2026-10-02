@@ -1,3 +1,4 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,7 +10,10 @@ import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
 
 class AppExtract extends StatelessWidget {
-  const AppExtract({super.key, this.limit});
+  AppExtract({super.key, this.limit, this.pageController, this.controller});
+
+  final PageController? pageController;
+  final NotchBottomBarController? controller;
   final int? limit;
 
   @override
@@ -30,31 +34,49 @@ class AppExtract extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const AppExtractHead(),
-          const AppLine(size: 1.3),
-
-          SizedBox(height: 16),
-
-          ...transactions.map((transaction) {
-            final category = mockCategories.firstWhere(
-              (category) => category.id == transaction.categoryId,
-            );
-
-            return GestureDetector(
-              onTap: () {
-                context.push('/ReleaseDetailsPage', extra: transaction);
-              },
-              child: AppSpend(
-                name: transaction.establishment,
-                category: category.name,
-                price: transaction.amount,
-                date:
-                    '${transaction.purchasedAt.day} de '
-                    '${transaction.purchasedAt.month}',
-                icone: Icon(category.icon, color: AppColors.tertiary),
+          Column(
+            children: [
+              AppExtractHead(
+                controller: controller!,
+                pageController: pageController!,
               ),
-            );
-          }),
+              const AppLine(size: 1.3),
+              GestureDetector(
+                child: const AppSpend(
+                  name: 'Supermercado',
+                  category: 'Alimentação',
+                  price: -12,
+                  date: '7 de julho',
+                  icone: Icon(
+                    Icons.shopping_cart_outlined,
+                    color: AppColors.tertiary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              ...transactions.map((transaction) {
+                final category = mockCategories.firstWhere(
+                  (category) => category.id == transaction.categoryId,
+                );
+
+                return GestureDetector(
+                  onTap: () {
+                    context.push('/ReleaseDetailsPage', extra: transaction);
+                  },
+                  child: AppSpend(
+                    name: transaction.establishment,
+                    category: category.name,
+                    price: transaction.amount,
+                    date:
+                        '${transaction.purchasedAt.day} de '
+                        '${transaction.purchasedAt.month}',
+                    icone: Icon(category.icon, color: AppColors.tertiary),
+                  ),
+                );
+              }),
+            ],
+          ),
         ],
       ),
     );

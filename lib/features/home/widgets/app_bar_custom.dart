@@ -14,27 +14,17 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.backGround,
       title: AppTitleAppBar(userName: userName),
+      automaticallyImplyLeading: false,
       centerTitle: false,
       actions: [
         AppIconAppBar(
-          numPadding: 8,
+          numPadding: 20,
           icon: IconButton(
             onPressed: () {
               context.push('/SettingsPage');
             },
             icon: const Icon(
               Icons.settings_outlined,
-              color: AppColors.white,
-              size: 20,
-            ),
-          ),
-        ),
-        AppIconAppBar(
-          numPadding: 28,
-          icon: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_none_sharp,
               color: AppColors.white,
               size: 20,
             ),

@@ -1,14 +1,18 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
+import 'package:sem_sufoco/features/home/widgets/Graphic/app_graphic_setion.dart';
 import 'package:sem_sufoco/features/home/widgets/app_bar_custom.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract.dart';
-import 'package:sem_sufoco/features/home/widgets/app_graphic.dart';
 import 'package:sem_sufoco/features/categorie/widget/card_category_setion.dart';
 import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({this.pageController, this.controller, super.key});
+
+  final PageController? pageController;
+  final NotchBottomBarController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: AppColors.backGround,
       appBar: AppBarCustom(userName: userName),
       extendBodyBehindAppBar: false,
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -25,22 +31,7 @@ class HomePage extends StatelessWidget {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: AppColors.bg,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: AppColors.shodownBox,
-                        blurRadius: 4, // O desfoque da sombra
-                        // O quanto a sombra se espalha
-                      ),
-                    ],
-                  ),
-                  child: AppGraphic(),
-                ),
+                const AppGraphicSetion(),
 
                 const Text('Categorias', style: AppTextStyle.subTitle),
 
@@ -52,33 +43,14 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                const AppExtract(limit: 4),
+                AppExtract(
+                  pageController: pageController!,
+                  controller: controller!,
+                ),
               ],
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 1,
-        backgroundColor: AppColors.backGround,
-
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Início',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.search_outlined),
-            label: 'Buscar',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
       ),
     );
   }

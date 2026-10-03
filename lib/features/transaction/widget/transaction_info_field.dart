@@ -32,8 +32,8 @@ class TransactionInfoField extends StatelessWidget {
       cursorColor: AppColors.colorsTheme,
       decoration: InputDecoration(
         hintText: labelTitle,
-        hintStyle: AppTextStyle.bodySmall.copyWith(color: Colors.grey),
-        prefixIcon: Icon(icon, color: AppColors.colorsTheme),
+        hintStyle: AppTextStyle.bodySmall.copyWith(color: AppColors.white),
+        prefixIcon: Icon(icon, color: AppColors.accent),
         border: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
       ),

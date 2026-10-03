@@ -36,7 +36,6 @@ class HomePage extends StatelessWidget {
                 const Text('Categorias', style: AppTextStyle.subTitle),
 
                 SizedBox(
-                  height: 100,
                   child: CardCategorySetion(
                     categories: mockCategories,
                     limit: 5,

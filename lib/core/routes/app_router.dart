@@ -4,13 +4,13 @@ import 'package:sem_sufoco/core/model/category.dart';
 import 'package:sem_sufoco/core/model/transaction.dart';
 
 import 'package:sem_sufoco/features/ExtractPage/page/extract_page.dart';
-import 'package:sem_sufoco/features/categorie/page/Category_Extract_page.dart';
+import 'package:sem_sufoco/features/categorie/page/category_Extract_page.dart';
 import 'package:sem_sufoco/features/categorie/page/categories_page.dart';
 import 'package:sem_sufoco/features/home/pages/home_page.dart';
 import 'package:sem_sufoco/features/home/pages/home_page_setion.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
 import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
-import 'package:sem_sufoco/features/settings/page/settings_page.dart';
+import 'package:sem_sufoco/features/settings/pages/settings_page.dart';
 import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 
 final GoRouter appRouter = GoRouter(

@@ -45,7 +45,7 @@ class CardCategorySetion extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-            context.push('/CategoriesPage');
+            context.push('/CategoryExtractPage', extra: category);
           },
           child: AppCardCategory(
             category: category.name,

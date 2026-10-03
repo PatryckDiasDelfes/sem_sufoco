@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 import '../controller/category_controller.dart';
 
@@ -29,22 +29,19 @@ class _CategoriesView extends StatelessWidget {
     final controller = context.watch<CategoryController>();
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.backGround,
 
       // =========================
       // AppBar
       // =========================
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        backgroundColor: AppColors.backGround,
         centerTitle: true,
         title: const Text(
           'Categorias',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: const [
-          Icon(Symbols.settings, color: Color(0xFF5CCDA7)),
-          SizedBox(width: 16),
-        ],
       ),
 
       // =========================
@@ -70,22 +67,22 @@ class _CategoriesView extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0A2E1E),
+                  color: AppColors.bg,
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.accent),
+                  boxShadow: const [
+                    BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
+                  ],
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      category.icon,
-                      size: 28,
-                      color: const Color(0xFF98FFE0),
-                    ),
+                    Icon(category.icon, size: 28, color: AppColors.accent),
                     const SizedBox(height: 8),
                     Text(
                       category.name,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
                       ),

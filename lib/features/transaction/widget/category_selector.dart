@@ -58,24 +58,22 @@ class _CategorySelectorState extends State<CategorySelector> {
           ],
         ),
         const SizedBox(height: 10),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: visibleCategories.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.05,
-          ),
-          itemBuilder: (_, index) {
-            final category = visibleCategories[index];
+        Row(
+          children: [
+            for (int index = 0; index < visibleCategories.length; index++) ...[
+              Expanded(
+                child: _card(
+                  visibleCategories[index],
+                  selected: visibleCategories[index].id == selectedCategoryId,
+                ),
+              ),
 
-            return _card(category, selected: category.id == selectedCategoryId);
-          },
+              if (index < visibleCategories.length - 1)
+                const SizedBox(width: 10),
+            ],
+          ],
         ),
         if (selected != null) ...[
-          const SizedBox(height: 12),
           Row(
             children: [
               Icon(Icons.check_circle, size: 18, color: AppColors.primary),
@@ -106,9 +104,14 @@ class _CategorySelectorState extends State<CategorySelector> {
       borderRadius: BorderRadius.circular(16),
       onTap: () => _selectCategory(category),
       child: Container(
+        height: 90,
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.backGround,
+          color: selected ? AppColors.primary : AppColors.bg,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardGreen),
+          boxShadow: const [
+            BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

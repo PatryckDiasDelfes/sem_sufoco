@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 class AppReleaseDetailsIcon extends StatelessWidget {
-  const AppReleaseDetailsIcon({super.key});
+  const AppReleaseDetailsIcon({super.key, required this.icon});
+
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -13,18 +16,10 @@ class AppReleaseDetailsIcon extends StatelessWidget {
         border: Border.all(color: AppColors.cardGreen, width: 1),
         shape: BoxShape.circle,
         boxShadow: const [
-          BoxShadow(
-            color: AppColors.shodownBox,
-            blurRadius: 4, // O desfoque da sombra
-            // O quanto a sombra se espalha
-          ),
+          BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
         ],
       ),
-      child: const Icon(
-        Icons.local_cafe_outlined,
-        color: AppColors.accent,
-        size: 32,
-      ),
+      child: Icon(icon, color: AppColors.accent, size: 32),
     );
   }
 }

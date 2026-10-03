@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 class AppButtonShowCategory extends StatelessWidget {
-  const AppButtonShowCategory({super.key});
+  const AppButtonShowCategory({
+    super.key,
+    required this.category,
+    required this.icon,
+  });
+
+  final String category;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -12,30 +20,25 @@ class AppButtonShowCategory extends StatelessWidget {
         color: AppColors.bg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
-          BoxShadow(
-            color: AppColors.shodownBox,
-            blurRadius: 4, // O desfoque da sombra
-            // O quanto a sombra se espalha
-          ),
+          BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
         ],
-
         border: Border.all(color: AppColors.cardGreen),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.restaurant, color: AppColors.accent, size: 18),
-          SizedBox(width: 8),
+          Icon(icon, color: AppColors.accent, size: 18),
+          const SizedBox(width: 8),
           Text(
-            'Alimentação',
-            style: TextStyle(
+            category,
+            style: const TextStyle(
               color: AppColors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(width: 8),
-          Icon(Icons.edit_outlined, color: AppColors.accent, size: 18),
+          const SizedBox(width: 8),
+          const Icon(Icons.edit_outlined, color: AppColors.accent, size: 18),
         ],
       ),
     );

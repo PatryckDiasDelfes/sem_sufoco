@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/model/transaction.dart';
+import '../../../shared/mocks/transaction_mock.dart';
 
 class TransactionController extends ChangeNotifier {
   // =========================
   // Lista de transações
   // =========================
 
-  final List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [...mockTransactions];
 
   List<Transaction> get transactions => _transactions;
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:sem_sufoco/core/model/category.dart';
+import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/home/widgets/app_card_category.dart';
 import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
@@ -25,19 +26,22 @@ class CardCategorySetion extends StatelessWidget {
         final category = displayedCategories[index];
 
         // =========================
-        // Total da categoria
+        // Saldo da categoria
         // =========================
 
-        final price = mockTransactions
-            .where(
-              (transaction) =>
-                  transaction.categoryId == category.id &&
-                  transaction.type.name == 'expense',
-            )
-            .fold<double>(
-              0,
-              (total, transaction) => total + transaction.amount,
-            );
+        final balance = mockTransactions
+            .where((transaction) => transaction.categoryId == category.id)
+            .fold<double>(0, (total, transaction) {
+              if (transaction.type == TransactionType.income) {
+                return total + transaction.amount;
+              }
+
+              return total - transaction.amount;
+            });
+
+        final balanceColor = balance >= 0
+            ? AppColors.grenLive
+            : AppColors.danger;
 
         return GestureDetector(
           onTap: () {
@@ -45,23 +49,17 @@ class CardCategorySetion extends StatelessWidget {
           },
           child: AppCardCategory(
             category: category.name,
-            price: price,
+            price: balance,
+            priceColor: balanceColor,
             icon: Icon(category.icon, color: AppColors.white),
-            color: AppColors.purple,
+            color: category.color,
           ),
         );
       },
       options: CarouselOptions(
         height: 150,
-        viewportFraction: 0.95,
-        enlargeCenterPage: true,
-        enlargeFactor: 0.05,
-        enlargeStrategy: CenterPageEnlargeStrategy.scale,
-
+        viewportFraction: 0.32,
         enableInfiniteScroll: true,
-        scrollDirection: Axis.horizontal,
-
-        scrollPhysics: const BouncingScrollPhysics(),
       ),
     );
   }

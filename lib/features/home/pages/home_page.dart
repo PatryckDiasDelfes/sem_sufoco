@@ -39,13 +39,14 @@ class HomePage extends StatelessWidget {
                   height: 100,
                   child: CardCategorySetion(
                     categories: mockCategories,
-                    limit: 4,
+                    limit: 5,
                   ),
                 ),
 
                 AppExtract(
                   pageController: pageController!,
                   controller: controller!,
+                  limit: 6,
                 ),
               ],
             ),

@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/release_details/widgets/app_button_show_category.dart';
 import 'package:sem_sufoco/features/release_details/widgets/app_about_transison.dart';
 import 'package:sem_sufoco/features/release_details/widgets/app_release_details_icon.dart';
+import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class ReleaseDetailsPage extends StatelessWidget {
-  const ReleaseDetailsPage({super.key});
+  const ReleaseDetailsPage({super.key, required this.transaction});
+
+  final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
+    final category = mockCategories.firstWhere(
+      (category) => category.id == transaction.categoryId,
+    );
+
+    final isIncome = transaction.type == TransactionType.income;
+
     return Scaffold(
       backgroundColor: AppColors.backGround,
 
+      // =========================
+      // AppBar
+      // =========================
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -22,9 +36,9 @@ class ReleaseDetailsPage extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        title: const Text(
-          'Compra no débito',
-          style: TextStyle(
+        title: Text(
+          isIncome ? 'Receita recebida' : 'Saída',
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: AppColors.white,
@@ -32,41 +46,48 @@ class ReleaseDetailsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: const Column(
-        children: [
-          SizedBox(height: 24),
 
-          //Local do icon do café
-          AppReleaseDetailsIcon(),
+      // =========================
+      // Conteúdo
+      // =========================
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
 
-          SizedBox(height: 24),
+            AppReleaseDetailsIcon(icon: category.icon),
 
-          Text(
-            'R\$ 7,50',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+            const SizedBox(height: 24),
+
+            Text(
+              '${isIncome ? '+' : '-'} '
+              'R\$ ${transaction.amount.toStringAsFixed(2).replaceAll('.', ',')}',
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+                color: isIncome ? Colors.green : Colors.red,
+              ),
             ),
-          ),
 
-          SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          Text(
-            'Lucca Cantina E Restaublumenau Bra',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
+            Text(
+              transaction.establishment,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
 
-          SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          AppButtonShowCategory(),
+            AppButtonShowCategory(category: category.name, icon: category.icon),
 
-          SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          AppAboutTransison(),
+            AppAboutTransison(transaction: transaction),
 
-          SizedBox(height: 32),
-        ],
+            const SizedBox(height: 32),
+          ],
+        ),
       ),
     );
   }

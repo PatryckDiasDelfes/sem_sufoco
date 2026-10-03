@@ -2,6 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract_head.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
@@ -18,9 +19,14 @@ class AppExtract extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // =========================
+    // Transações
+    // =========================
+
     final transactions = limit == null
         ? mockTransactions
         : mockTransactions.take(limit!).toList();
+
     return Container(
       padding: const EdgeInsets.only(bottom: 16),
       width: double.infinity,
@@ -34,49 +40,59 @@ class AppExtract extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Column(
-            children: [
-              AppExtractHead(
-                controller: controller!,
-                pageController: pageController!,
-              ),
-              const AppLine(size: 1.3),
-              GestureDetector(
-                child: const AppSpend(
-                  name: 'Supermercado',
-                  category: 'Alimentação',
-                  price: -12,
-                  date: '7 de julho',
-                  icone: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: AppColors.tertiary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              ...transactions.map((transaction) {
-                final category = mockCategories.firstWhere(
-                  (category) => category.id == transaction.categoryId,
-                );
-
-                return GestureDetector(
-                  onTap: () {
-                    context.push('/ReleaseDetailsPage', extra: transaction);
-                  },
-                  child: AppSpend(
-                    name: transaction.establishment,
-                    category: category.name,
-                    price: transaction.amount,
-                    date:
-                        '${transaction.purchasedAt.day} de '
-                        '${transaction.purchasedAt.month}',
-                    icone: Icon(category.icon, color: AppColors.tertiary),
-                  ),
-                );
-              }),
-            ],
+          // =========================
+          // Cabeçalho
+          // =========================
+          AppExtractHead(
+            controller: controller!,
+            pageController: pageController!,
           ),
+
+          const AppLine(size: 1.3),
+
+          // =========================
+          // Transações
+          // =========================
+          ...transactions.map((transaction) {
+            final category = mockCategories.firstWhere(
+              (category) => category.id == transaction.categoryId,
+            );
+
+            // =========================
+            // Tipo da transação
+            // =========================
+
+            final isIncome = transaction.type == TransactionType.income;
+
+            return GestureDetector(
+              onTap: () {
+                context.push('/ReleaseDetailsPage', extra: transaction);
+              },
+              child: AppSpend(
+                name: transaction.establishment,
+                category: category.name,
+                price: transaction.amount,
+
+                // =========================
+                // Cor do valor
+                // =========================
+                priceColor: isIncome ? AppColors.grenLive : AppColors.danger,
+
+                // =========================
+                // Data
+                // =========================
+                date:
+                    '${transaction.purchasedAt.day.toString().padLeft(2, '0')}/'
+                    '${transaction.purchasedAt.month.toString().padLeft(2, '0')}/'
+                    '${transaction.purchasedAt.year}',
+
+                // =========================
+                // Ícone
+                // =========================
+                icone: Icon(category.icon),
+              ),
+            );
+          }),
         ],
       ),
     );

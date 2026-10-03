@@ -50,57 +50,52 @@ class _CategoriesView extends StatelessWidget {
       // =========================
       // Categorias
       // =========================
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: GridView.builder(
-                itemCount: controller.categories.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.5,
-                ),
-                itemBuilder: (context, index) {
-                  final category = controller.categories[index];
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridView.builder(
+          itemCount: controller.categories.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.5,
+          ),
+          itemBuilder: (context, index) {
+            final category = controller.categories[index];
 
-                  return InkWell(
-                    onTap: () =>
-                        context.push('/CategoryExtractPage', extra: category),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0A2E1E),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            category.icon,
-                            size: 28,
-                            color: const Color(0xFF98FFE0),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            category.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
+            return InkWell(
+              onTap: () {
+                context.push('/CategoryExtractPage', extra: category);
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0A2E1E),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      category.icon,
+                      size: 28,
+                      color: const Color(0xFF98FFE0),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      category.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

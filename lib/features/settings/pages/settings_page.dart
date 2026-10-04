@@ -19,9 +19,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.backGround,
       appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.backGround,
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
         leadingWidth: 78,
@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 style: IconButton.styleFrom(
-                  backgroundColor: AppColors.darkSurface,
+                  backgroundColor: AppColors.bg,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

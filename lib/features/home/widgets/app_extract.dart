@@ -11,7 +11,12 @@ import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
 
 class AppExtract extends StatelessWidget {
-  AppExtract({super.key, this.limit, this.pageController, this.controller});
+  const AppExtract({
+    super.key,
+    this.limit,
+    this.pageController,
+    this.controller,
+  });
 
   final PageController? pageController;
   final NotchBottomBarController? controller;

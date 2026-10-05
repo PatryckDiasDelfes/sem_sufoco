@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
+import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
 import 'package:sem_sufoco/utils.dart';
 
 class AppGraphic extends StatelessWidget {
@@ -8,87 +10,85 @@ class AppGraphic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        minY: 0,
-        maxY: 600,
-        alignment: BarChartAlignment.start,
-        borderData: FlBorderData(
-          show: true,
-          border: const Border(
-            top: BorderSide.none,
-            left: BorderSide(color: AppColors.grenLive),
-            bottom: BorderSide(color: AppColors.grenLive),
-          ),
-        ),
-        gridData: FlGridData(
-          horizontalInterval: 150,
-          show: true,
-          drawHorizontalLine: true,
-          drawVerticalLine: false,
+    return Consumer<GraphicController>(
+      builder: (context, controller, _) {
+        final interval = controller.interval;
 
-          getDrawingHorizontalLine: (value) {
-            return const FlLine(color: AppColors.gray100, strokeWidth: 1);
-          },
-        ),
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              reservedSize: 60,
-              showTitles: true,
-              interval: 100,
-
-              getTitlesWidget: (value, meta) {
-                return SideTitleWidget(
-                  meta: meta,
-                  child: Text(
-                    Utils().formatCurrencyNoDouble(value),
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 9,
-                    ),
-                  ),
-                );
+        return BarChart(
+          BarChartData(
+            minY: 0,
+            maxY: controller.maxY,
+            alignment: BarChartAlignment.start,
+            borderData: FlBorderData(
+              show: true,
+              border: const Border(
+                top: BorderSide.none,
+                left: BorderSide(color: AppColors.grenLive),
+                bottom: BorderSide(color: AppColors.grenLive),
+              ),
+            ),
+            gridData: FlGridData(
+              horizontalInterval: interval,
+              show: true,
+              drawHorizontalLine: true,
+              drawVerticalLine: false,
+              getDrawingHorizontalLine: (value) {
+                return const FlLine(color: AppColors.gray100, strokeWidth: 1);
               },
             ),
-          ),
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 30,
-              getTitlesWidget: (value, meta) {
-                return SideTitleWidget(
-                  meta: meta,
-                  child: Text(
-                    value.toInt().toString(),
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                );
-              },
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  reservedSize: 60,
+                  showTitles: true,
+                  interval: interval,
+                  getTitlesWidget: (value, meta) {
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        Utils().formatCurrencyNoDouble(value),
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 9,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 30,
+                  getTitlesWidget: (value, meta) {
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        value.toInt().toString(),
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
+            barGroups: controller.groups
+                .map((g) => RodsGroup(g.values.map(Rods).toList(), g.x))
+                .toList(),
           ),
-        ),
-        barGroups: [
-          RodsGroup([Rods(100), Rods(500), Rods(400)], 0),
-          RodsGroup([Rods(100), Rods(500), Rods(400)], 5),
-          RodsGroup([Rods(100), Rods(400), Rods(500)], 10),
-          RodsGroup([Rods(100), Rods(400), Rods(500)], 15),
-          RodsGroup([Rods(100), Rods(100), Rods(500)], 20),
-          RodsGroup([Rods(500), Rods(500), Rods(500)], 25),
-          RodsGroup([Rods(400), Rods(400), Rods(400)], 30),
-        ],
-      ),
+        );
+      },
     );
   }
 

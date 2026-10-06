@@ -5,33 +5,23 @@ import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/transaction/widget/all_categories_sheet.dart';
 
-class CategorySelector extends StatefulWidget {
+class CategorySelector extends StatelessWidget {
   const CategorySelector({
     super.key,
     required this.categories,
+    this.selectedCategoryId,
     this.onSelected,
   });
 
   final List<Category> categories;
+  final String? selectedCategoryId;
   final ValueChanged<Category>? onSelected;
 
   @override
-  State<CategorySelector> createState() => _CategorySelectorState();
-}
-
-class _CategorySelectorState extends State<CategorySelector> {
-  String? selectedCategoryId;
-
-  void _selectCategory(Category category) {
-    setState(() => selectedCategoryId = category.id);
-    widget.onSelected?.call(category);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final visibleCategories = widget.categories.take(3).toList();
+    final visibleCategories = categories.take(3).toList();
 
-    final selected = widget.categories
+    final selected = categories
         .where((category) => category.id == selectedCategoryId)
         .firstOrNull;
 
@@ -48,9 +38,9 @@ class _CategorySelectorState extends State<CategorySelector> {
                 backgroundColor: AppColors.background,
                 isScrollControlled: true,
                 builder: (_) => AllCategoriesSheet(
-                  categories: widget.categories,
+                  categories: categories,
                   selectedCategoryId: selectedCategoryId,
-                  onSelected: _selectCategory,
+                  onSelected: onSelected,
                 ),
               ),
               icon: const Icon(Icons.more_horiz, color: Colors.white),
@@ -102,7 +92,7 @@ class _CategorySelectorState extends State<CategorySelector> {
   Widget _card(Category category, {bool selected = false}) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () => _selectCategory(category),
+      onTap: () => onSelected?.call(category),
       child: Container(
         height: 90,
         decoration: BoxDecoration(

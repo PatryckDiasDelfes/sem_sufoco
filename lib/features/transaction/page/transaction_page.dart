@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
@@ -19,77 +20,97 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  // =========================
-  // Controllers dos campos
-  // =========================
-
-  final TextEditingController establishmentController = TextEditingController();
-
-  final TextEditingController amountController = TextEditingController();
-
-  final TextEditingController descriptionController = TextEditingController();
-
-  Future<void> _selectDate() async {
-    await showDatePicker(
+  Future<void> _selectDate(TransactionController controller) async {
+    final date = await showDatePicker(
       context: context,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
       initialDate: DateTime.now(),
     );
+    controller.setDate(date);
   }
 
-  Future<void> _selectTime() async {
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  Future<void> _selectTime(TransactionController controller) async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    controller.setTime(time);
   }
 
-  @override
-  void dispose() {
-    establishmentController.dispose();
-    amountController.dispose();
-    descriptionController.dispose();
+  void _save(TransactionController controller) {
+    final error = controller.submit();
 
-    super.dispose();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error ?? 'Gasto salvo com sucesso!')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TransactionController(),
+    return Consumer<TransactionController>(
+      builder: (context, controller, child) {
+        return Scaffold(
+          backgroundColor: AppColors.backGround,
 
-      // =========================
-      // Consumer
-      // =========================
-      child: Consumer<TransactionController>(
-        builder: (context, controller, child) {
-          return Scaffold(
+          // ============================================================
+          // AppBar
+          // ============================================================
+          appBar: AppBar(
             backgroundColor: AppColors.backGround,
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            title: const Text(
+              'Novo lançamento',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.white,
+              ),
+            ),
+            centerTitle: true,
+            actions: const [
+              Icon(Icons.camera_outlined, color: AppColors.accent),
+              SizedBox(width: 16),
+            ],
+          ),
 
-            // ============================================================
-            // AppBar
-            // ============================================================
-            appBar: AppBar(
-              backgroundColor: AppColors.backGround,
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              title: const Text(
-                'Novo lançamento',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.white,
+          // ============================================================
+          // Botão salvar
+          // ============================================================
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => _save(controller),
+                  child: const Text(
+                    'Salvar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
-              centerTitle: true,
-              actions: const [
-                Icon(Icons.camera_outlined, color: AppColors.accent),
-                SizedBox(width: 16),
-              ],
             ),
+          ),
 
-            // ============================================================
-            // Conteúdo
-            // ============================================================
-            body: Column(
+          // ============================================================
+          // Conteúdo (rolável)
+          // ============================================================
+          body: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.only(bottom: 200),
+            child: Column(
               children: [
                 const SizedBox(height: 16),
 
@@ -109,9 +130,6 @@ class _TransactionPageState extends State<TransactionPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ==================================================
-                        // Título
-                        // ==================================================
                         Text(
                           'Sobre a transação',
                           style: AppTextStyle.bodySmall.copyWith(
@@ -121,17 +139,16 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
-                        // Data
-                        // ==================================================
+                        // Data e horário
                         Row(
                           children: [
                             Expanded(
                               child: TransactionInfoField(
                                 labelTitle: 'Data',
                                 icon: Icons.calendar_today_outlined,
+                                controller: controller.dateController,
                                 readOnly: true,
-                                onTap: _selectDate,
+                                onTap: () => _selectDate(controller),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -139,8 +156,9 @@ class _TransactionPageState extends State<TransactionPage> {
                               child: TransactionInfoField(
                                 labelTitle: 'Horário',
                                 icon: Icons.access_time,
+                                controller: controller.timeController,
                                 readOnly: true,
-                                onTap: _selectTime,
+                                onTap: () => _selectTime(controller),
                               ),
                             ),
                           ],
@@ -148,45 +166,40 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
                         // Estabelecimento
-                        // ==================================================
                         TransactionInfoField(
                           labelTitle: 'Estabelecimento',
                           icon: Icons.storefront_outlined,
-                          controller: establishmentController,
+                          controller: controller.establishmentController,
                           keyboardType: TextInputType.text,
                         ),
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
-                        // Valor
-                        // ==================================================
+                        // Valor (somente números, vírgula ou ponto, 2 casas)
                         TransactionInfoField(
                           labelTitle: '0,00',
                           icon: Icons.attach_money,
-
-                          controller: amountController,
+                          controller: controller.amountController,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*[,.]?\d{0,2}'),
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
-                        // Divisor
-                        // ==================================================
                         const AppLine(size: 1),
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
                         // Descrição
-                        // ==================================================
                         TextFormField(
-                          controller: descriptionController,
+                          controller: controller.descriptionController,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -212,22 +225,17 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
                         // Categoria
-                        // ==================================================
-                        SizedBox(
-                          child: CategorySelector(
-                            categories: mockCategories,
-                            onSelected: (category) {
-                              print(category.id);
-                            },
-                          ),
+                        CategorySelector(
+                          categories: mockCategories,
+                          selectedCategoryId: controller.selectedCategoryId,
+                          onSelected: (category) =>
+                              controller.selectCategory(category.id),
                         ),
 
                         const SizedBox(height: 10),
-                        // ==================================================
+
                         // Forma de pagamento
-                        // ==================================================
                         const Text(
                           'Forma de pagamento',
                           style: TextStyle(
@@ -238,26 +246,19 @@ class _TransactionPageState extends State<TransactionPage> {
                         ),
                         const SizedBox(height: 10),
 
-                        const AppTransactionPaymentSection(),
-
-                        // const SizedBox(height: 8),
+                        AppTransactionPaymentSection(
+                          selected: controller.selectedPaymentMethod,
+                          onSelected: controller.selectPaymentMethod,
+                        ),
                       ],
                     ),
                   ),
                 ),
-
-                // ============================================================
-                // Botão salvar
-                // // ============================================================
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
-
-// =========================
-// Opção de pagamento
-// =========================

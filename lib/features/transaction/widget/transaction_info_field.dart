@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_style.dart';
@@ -12,6 +13,7 @@ class TransactionInfoField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
+    this.inputFormatters,
   });
 
   final String labelTitle;
@@ -20,12 +22,14 @@ class TransactionInfoField extends StatelessWidget {
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
   final bool readOnly;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       onTap: onTap,
       readOnly: readOnly,
       style: AppTextStyle.bodySmall.copyWith(color: AppColors.white),

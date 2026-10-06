@@ -224,7 +224,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           ),
                         ),
 
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // ==================================================
                         // Forma de pagamento
                         // ==================================================
@@ -236,9 +236,9 @@ class _TransactionPageState extends State<TransactionPage> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
 
-                        AppTransactionPaymentSection(),
+                        const AppTransactionPaymentSection(),
 
                         // const SizedBox(height: 8),
                       ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
-import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 
 class AppTransactionPaymentSection extends StatelessWidget {
   const AppTransactionPaymentSection({super.key});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:sem_sufoco/core/model/transaction.dart';
 
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
@@ -29,18 +30,55 @@ class _TransactionPageState extends State<TransactionPage> {
 
   final TextEditingController descriptionController = TextEditingController();
 
+  PaymentMethod? selectedPaymentMethod;
+
+  // =========================
+  // Data e Hora selecionadas
+  // =========================
+
+  DateTime? selectedDate;
+
+  TimeOfDay? selectedTime;
+
+  // =========================
+  // Selecionar Data
+  // =========================
+
   Future<void> _selectDate() async {
-    await showDatePicker(
+    final date = await showDatePicker(
       context: context,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
-      initialDate: DateTime.now(),
+      initialDate: selectedDate ?? DateTime.now(),
     );
+
+    if (date == null) return;
+
+    setState(() {
+      selectedDate = date;
+    });
   }
 
+  // =========================
+  // Selecionar Hora
+  // =========================
+
   Future<void> _selectTime() async {
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    final time = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+
+    if (time == null) return;
+
+    setState(() {
+      selectedTime = time;
+    });
   }
+
+  // =========================
+  // Dispose
+  // =========================
 
   @override
   void dispose() {
@@ -50,6 +88,10 @@ class _TransactionPageState extends State<TransactionPage> {
 
     super.dispose();
   }
+
+  // =========================
+  // Build
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +106,9 @@ class _TransactionPageState extends State<TransactionPage> {
           return Scaffold(
             backgroundColor: AppColors.backGround,
 
-            // ============================================================
+            // =========================
             // AppBar
-            // ============================================================
+            // =========================
             appBar: AppBar(
               backgroundColor: AppColors.backGround,
               automaticallyImplyLeading: false,
@@ -86,9 +128,9 @@ class _TransactionPageState extends State<TransactionPage> {
               ],
             ),
 
-            // ============================================================
+            // =========================
             // Conteúdo
-            // ============================================================
+            // =========================
             body: Column(
               children: [
                 const SizedBox(height: 16),
@@ -106,12 +148,13 @@ class _TransactionPageState extends State<TransactionPage> {
                         BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
                       ],
                     ),
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ==================================================
+                        // =========================
                         // Título
-                        // ==================================================
+                        // =========================
                         Text(
                           'Sobre a transação',
                           style: AppTextStyle.bodySmall.copyWith(
@@ -121,23 +164,31 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
-                        // Data
-                        // ==================================================
+                        // =========================
+                        // Data e Hora
+                        // =========================
                         Row(
                           children: [
                             Expanded(
                               child: TransactionInfoField(
-                                labelTitle: 'Data',
+                                labelTitle: selectedDate == null
+                                    ? 'Data'
+                                    : '${selectedDate!.day.toString().padLeft(2, '0')}/'
+                                          '${selectedDate!.month.toString().padLeft(2, '0')}/'
+                                          '${selectedDate!.year}',
                                 icon: Icons.calendar_today_outlined,
                                 readOnly: true,
                                 onTap: _selectDate,
                               ),
                             ),
+
                             const SizedBox(width: 12),
+
                             Expanded(
                               child: TransactionInfoField(
-                                labelTitle: 'Horário',
+                                labelTitle: selectedTime == null
+                                    ? 'Horário'
+                                    : selectedTime!.format(context),
                                 icon: Icons.access_time,
                                 readOnly: true,
                                 onTap: _selectTime,
@@ -148,9 +199,9 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
+                        // =========================
                         // Estabelecimento
-                        // ==================================================
+                        // =========================
                         TransactionInfoField(
                           labelTitle: 'Estabelecimento',
                           icon: Icons.storefront_outlined,
@@ -160,13 +211,12 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
+                        // =========================
                         // Valor
-                        // ==================================================
+                        // =========================
                         TransactionInfoField(
                           labelTitle: '0,00',
                           icon: Icons.attach_money,
-
                           controller: amountController,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
@@ -175,16 +225,16 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 24),
 
-                        // ==================================================
+                        // =========================
                         // Divisor
-                        // ==================================================
+                        // =========================
                         const AppLine(size: 1),
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
+                        // =========================
                         // Descrição
-                        // ==================================================
+                        // =========================
                         TextFormField(
                           controller: descriptionController,
                           style: const TextStyle(
@@ -212,9 +262,9 @@ class _TransactionPageState extends State<TransactionPage> {
 
                         const SizedBox(height: 16),
 
-                        // ==================================================
+                        // =========================
                         // Categoria
-                        // ==================================================
+                        // =========================
                         SizedBox(
                           child: CategorySelector(
                             categories: mockCategories,
@@ -225,9 +275,10 @@ class _TransactionPageState extends State<TransactionPage> {
                         ),
 
                         const SizedBox(height: 10),
-                        // ==================================================
+
+                        // =========================
                         // Forma de pagamento
-                        // ==================================================
+                        // =========================
                         const Text(
                           'Forma de pagamento',
                           style: TextStyle(
@@ -236,19 +287,21 @@ class _TransactionPageState extends State<TransactionPage> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+
                         const SizedBox(height: 10),
 
-                        const AppTransactionPaymentSection(),
-
-                        // const SizedBox(height: 8),
+                        AppTransactionPaymentSection(
+                          selectedPaymentMethod: selectedPaymentMethod,
+                          onSelected: (paymentMethod) {
+                            setState(() {
+                              selectedPaymentMethod = paymentMethod;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
-
-                // ============================================================
-                // Botão salvar
-                // // ============================================================
               ],
             ),
           );
@@ -257,7 +310,3 @@ class _TransactionPageState extends State<TransactionPage> {
     );
   }
 }
-
-// =========================
-// Opção de pagamento
-// =========================

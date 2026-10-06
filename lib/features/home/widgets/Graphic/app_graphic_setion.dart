@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
+
 import 'package:sem_sufoco/features/home/widgets/Graphic/app_calendar_graphic.dart';
+
 import 'package:sem_sufoco/features/home/widgets/Graphic/app_title_graphic.dart';
+
 import 'package:sem_sufoco/features/home/widgets/Graphic/app_graphic.dart';
 
 class AppGraphicSetion extends StatelessWidget {
@@ -17,11 +21,7 @@ class AppGraphicSetion extends StatelessWidget {
         border: Border.all(color: AppColors.cardGreen, width: 1),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
-          BoxShadow(
-            color: AppColors.shodownBox,
-            blurRadius: 4, // O desfoque da sombra
-            // O quanto a sombra se espalha
-          ),
+          BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
         ],
       ),
       child: const Padding(

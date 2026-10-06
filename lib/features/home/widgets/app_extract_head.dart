@@ -1,7 +1,11 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
+
 import 'package:sem_sufoco/core/theme/text_style.dart';
+
 import 'package:sem_sufoco/features/home/widgets/app_icon_stack_up_graphic.dart';
 
 class AppExtractHead extends StatelessWidget {
@@ -12,6 +16,7 @@ class AppExtractHead extends StatelessWidget {
   });
 
   final PageController pageController;
+
   final NotchBottomBarController controller;
 
   @override
@@ -41,7 +46,10 @@ class AppExtractHead extends StatelessWidget {
               ],
             ),
             onTap: () {
-              pageController.jumpToPage(0);
+              if (pageController.hasClients) {
+                pageController.jumpToPage(0);
+              }
+
               controller.jumpTo(0);
             },
           ),

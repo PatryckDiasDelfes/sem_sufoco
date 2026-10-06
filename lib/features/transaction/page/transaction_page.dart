@@ -416,7 +416,7 @@ class _TransactionPageState extends State<TransactionPage> {
                               // Voltar Para Home
                               // =========================
 
-                              context.go('/HomePage');
+                              context.go('/MainHomePage');
                             },
                           ),
                         ],

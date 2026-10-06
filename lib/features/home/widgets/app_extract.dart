@@ -1,14 +1,15 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract_head.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
 import 'package:sem_sufoco/features/home/widgets/app_spend.dart';
+import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
 import 'package:sem_sufoco/shared/mocks/category_mock.dart';
-import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
 
 class AppExtract extends StatelessWidget {
   const AppExtract({
@@ -28,9 +29,11 @@ class AppExtract extends StatelessWidget {
     // Transações
     // =========================
 
+    final transactionController = context.watch<TransactionController>();
+
     final transactions = limit == null
-        ? mockTransactions
-        : mockTransactions.take(limit!).toList();
+        ? transactionController.transactions
+        : transactionController.transactions.take(limit!).toList();
 
     return Container(
       padding: const EdgeInsets.only(bottom: 16),

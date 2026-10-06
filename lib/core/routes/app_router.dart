@@ -1,3 +1,4 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/model/category.dart';
@@ -55,7 +56,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/HomePage',
       builder: (context, state) {
-        return const HomePage();
+        return HomePage(
+          pageController: PageController(),
+          controller: NotchBottomBarController(),
+        );
       },
     ),
 

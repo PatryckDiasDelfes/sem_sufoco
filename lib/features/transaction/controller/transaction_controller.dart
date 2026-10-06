@@ -47,7 +47,7 @@ class TransactionController extends ChangeNotifier {
       type: type,
     );
 
-    _transactions.add(transaction);
+    _transactions.insert(0, transaction);
 
     notifyListeners();
 

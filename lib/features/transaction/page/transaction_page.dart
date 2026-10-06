@@ -1,3 +1,4 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,7 +17,15 @@ import 'package:sem_sufoco/shared/app_button.dart';
 import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class TransactionPage extends StatefulWidget {
-  const TransactionPage({super.key});
+  const TransactionPage({
+    super.key,
+    required this.pageController,
+    required this.controller,
+  });
+
+  final PageController pageController;
+
+  final NotchBottomBarController controller;
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -413,10 +422,29 @@ class _TransactionPageState extends State<TransactionPage> {
                               }
 
                               // =========================
+                              // Limpar Formulário
+                              // =========================
+
+                              establishmentController.clear();
+                              amountController.clear();
+                              descriptionController.clear();
+
+                              setState(() {
+                                selectedPaymentMethod = null;
+                                selectedCategory = null;
+                                selectedDate = null;
+                                selectedTime = null;
+                              });
+
+                              // =========================
                               // Voltar Para Home
                               // =========================
 
-                              context.go('/MainHomePage');
+                              if (widget.pageController.hasClients) {
+                                widget.pageController.jumpToPage(1);
+                              }
+
+                              widget.controller.jumpTo(1);
                             },
                           ),
                         ],

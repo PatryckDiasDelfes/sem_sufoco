@@ -992,8 +992,43 @@ final List<Transaction> mockTransactions = [
     paymentMethod: PaymentMethod.pix,
     type: TransactionType.expense,
   ),
+
   // =========================
-  // Transações de meses anteriores
+  // Recebimentos
+  // =========================
+  Transaction(
+    id: 'transaction_097',
+    purchasedAt: DateTime(2026, 7, 5, 8, 0),
+    establishment: 'Salário',
+    amount: 10000.00,
+    description: 'Salário mensal',
+    categoryId: 'other',
+    paymentMethod: PaymentMethod.pix,
+    type: TransactionType.income,
+  ),
+  Transaction(
+    id: 'transaction_098',
+    purchasedAt: DateTime(2026, 7, 20, 14, 30),
+    establishment: 'Freela',
+    amount: 500.00,
+    description: 'Pagamento de projeto',
+    categoryId: 'other',
+    paymentMethod: PaymentMethod.pix,
+    type: TransactionType.income,
+  ),
+  Transaction(
+    id: 'transaction_099',
+    purchasedAt: DateTime(2026, 7, 5, 8, 0),
+    establishment: 'Salário',
+    amount: 2350.00,
+    description: 'Salário mensal',
+    categoryId: 'other',
+    paymentMethod: PaymentMethod.pix,
+    type: TransactionType.income,
+  ),
+
+  // =========================
+  // Junho 2026
   // =========================
   Transaction(
     id: 'transaction_100',
@@ -1066,6 +1101,9 @@ final List<Transaction> mockTransactions = [
     type: TransactionType.expense,
   ),
 
+  // =========================
+  // Maio 2026
+  // =========================
   Transaction(
     id: 'transaction_107',
     purchasedAt: DateTime(2026, 5, 3, 8, 10),
@@ -1137,6 +1175,9 @@ final List<Transaction> mockTransactions = [
     type: TransactionType.expense,
   ),
 
+  // =========================
+  // Abril 2026
+  // =========================
   Transaction(
     id: 'transaction_114',
     purchasedAt: DateTime(2026, 4, 2, 8, 0),
@@ -1199,36 +1240,86 @@ final List<Transaction> mockTransactions = [
   ),
 
   // =========================
-  // Recebimentos
+  // Outubro 2026
   // =========================
   Transaction(
-    id: 'transaction_097',
-    purchasedAt: DateTime(2026, 7, 5, 8, 0),
+    id: 'transaction_120',
+    purchasedAt: DateTime(2026, 10, 1, 8, 30),
     establishment: 'Salário',
-    amount: 10000.00,
+    amount: 2500.00,
     description: 'Salário mensal',
-    categoryId: 'salary',
+    categoryId: 'other',
     paymentMethod: PaymentMethod.pix,
     type: TransactionType.income,
   ),
   Transaction(
-    id: 'transaction_098',
-    purchasedAt: DateTime(2026, 7, 20, 14, 30),
-    establishment: 'Freela',
-    amount: 500.00,
-    description: 'Pagamento de projeto',
-    categoryId: 'freelance',
+    id: 'transaction_121',
+    purchasedAt: DateTime(2026, 10, 2, 12, 15),
+    establishment: 'Restaurante Sabor',
+    amount: 38.90,
+    description: 'Almoço',
+    categoryId: 'food',
+    paymentMethod: PaymentMethod.debitCard,
+    type: TransactionType.expense,
+  ),
+  Transaction(
+    id: 'transaction_122',
+    purchasedAt: DateTime(2026, 10, 3, 18, 40),
+    establishment: 'Posto Avenida',
+    amount: 80.00,
+    description: 'Combustível',
+    categoryId: 'transport',
+    paymentMethod: PaymentMethod.creditCard,
+    type: TransactionType.expense,
+  ),
+  Transaction(
+    id: 'transaction_123',
+    purchasedAt: DateTime(2026, 10, 4, 10, 20),
+    establishment: 'Supermercado Econômico',
+    amount: 156.70,
+    description: 'Compras do mês',
+    categoryId: 'food',
+    paymentMethod: PaymentMethod.debitCard,
+    type: TransactionType.expense,
+  ),
+  Transaction(
+    id: 'transaction_124',
+    purchasedAt: DateTime(2026, 10, 5, 14, 10),
+    establishment: 'Farmácia Central',
+    amount: 42.50,
+    description: 'Produtos de farmácia',
+    categoryId: 'health',
+    paymentMethod: PaymentMethod.pix,
+    type: TransactionType.expense,
+  ),
+  Transaction(
+    id: 'transaction_125',
+    purchasedAt: DateTime(2026, 10, 6, 9, 0),
+    establishment: 'Freelance',
+    amount: 350.00,
+    description: 'Serviço realizado',
+    categoryId: 'other',
     paymentMethod: PaymentMethod.pix,
     type: TransactionType.income,
   ),
   Transaction(
-    id: 'transaction_099',
-    purchasedAt: DateTime(2026, 7, 5, 8, 0),
-    establishment: 'Salário',
-    amount: 2350.00,
-    description: 'Salário mensal',
-    categoryId: 'salary',
-    paymentMethod: PaymentMethod.pix,
-    type: TransactionType.income,
+    id: 'transaction_126',
+    purchasedAt: DateTime(2026, 10, 6, 16, 30),
+    establishment: 'Pet Shop Amigo',
+    amount: 65.90,
+    description: 'Ração para os pets',
+    categoryId: 'other',
+    paymentMethod: PaymentMethod.creditCard,
+    type: TransactionType.expense,
+  ),
+  Transaction(
+    id: 'transaction_127',
+    purchasedAt: DateTime(2026, 10, 6, 19, 45),
+    establishment: 'Netflix',
+    amount: 39.90,
+    description: 'Assinatura mensal',
+    categoryId: 'leisure',
+    paymentMethod: PaymentMethod.creditCard,
+    type: TransactionType.expense,
   ),
 ];

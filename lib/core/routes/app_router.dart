@@ -47,13 +47,6 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/TransactionPage',
-      builder: (context, state) {
-        return const TransactionPage();
-      },
-    ),
-
-    GoRoute(
       path: '/HomePage',
       builder: (context, state) {
         return HomePage(

@@ -8,31 +8,35 @@ class AppCardCategory extends StatelessWidget {
     super.key,
     required this.category,
     required this.price,
+    required this.priceColor,
     required this.icon,
     required this.color,
   });
 
   final String category;
   final double price;
+  final Color priceColor;
   final Widget icon;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    Utils utils = Utils();
+    final Utils utils = Utils();
+
+    final priceText = price >= 0
+        ? '+${utils.formatCurrency(price)}'
+        : '-${utils.formatCurrency(price.abs())}';
+
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        width: 90,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: AppColors.bg,
+          border: Border.all(color: AppColors.cardGreen, width: 1),
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
-            BoxShadow(
-              color: AppColors.shodownBox,
-              blurRadius: 4, // O desfoque da sombra
-              // O quanto a sombra se espalha
-            ),
+            BoxShadow(color: Color.fromARGB(255, 112, 91, 91), blurRadius: 4),
           ],
         ),
         child: Padding(
@@ -47,14 +51,16 @@ class AppCardCategory extends StatelessWidget {
                 ),
                 child: Padding(padding: const EdgeInsets.all(4.0), child: icon),
               ),
-              const Expanded(child: SizedBox()),
-              Expanded(child: Text(category, style: AppTextStyle.extrectSub)),
 
-              Expanded(
-                child: Text(
-                  utils.formatCurrency(price),
-                  style: AppTextStyle.homePriceWhite,
-                ),
+              const Spacer(),
+
+              Text(category, style: AppTextStyle.extrectSub),
+
+              const SizedBox(height: 4),
+
+              Text(
+                priceText,
+                style: AppTextStyle.homePriceWhite.copyWith(color: priceColor),
               ),
             ],
           ),

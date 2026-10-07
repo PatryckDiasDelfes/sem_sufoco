@@ -1,11 +1,23 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
+
 import 'package:sem_sufoco/core/theme/text_style.dart';
+
 import 'package:sem_sufoco/features/home/widgets/app_icon_stack_up_graphic.dart';
 
 class AppExtractHead extends StatelessWidget {
-  const AppExtractHead({super.key});
+  const AppExtractHead({
+    super.key,
+    required this.pageController,
+    required this.controller,
+  });
+
+  final PageController pageController;
+
+  final NotchBottomBarController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +46,11 @@ class AppExtractHead extends StatelessWidget {
               ],
             ),
             onTap: () {
-              context.push('/TransactionPage');
+              if (pageController.hasClients) {
+                pageController.jumpToPage(0);
+              }
+
+              controller.jumpTo(0);
             },
           ),
         ],

@@ -1,7 +1,14 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sem_sufoco/core/model/category.dart';
+import 'package:sem_sufoco/core/model/transaction.dart';
+
+import 'package:sem_sufoco/features/ExtractPage/page/extract_page.dart';
+import 'package:sem_sufoco/features/categorie/page/category_Extract_page.dart';
 import 'package:sem_sufoco/features/categorie/page/categories_page.dart';
-import 'package:sem_sufoco/features/categorie/page/gastos_categoria_page.dart';
 import 'package:sem_sufoco/features/home/pages/home_page.dart';
+import 'package:sem_sufoco/features/home/pages/home_page_setion.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
 import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
 import 'package:sem_sufoco/features/settings/page/settings_page.dart';
@@ -28,39 +35,75 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/ReleaseDetailsPage',
       builder: (context, state) {
-        return const ReleaseDetailsPage();
-      },
-    ),
+        final transaction = state.extra;
 
-    GoRoute(
-      path: '/TransactionPage',
-      builder: (context, state) {
-        return const TransactionPage();
+        if (transaction is! Transaction) {
+          return const Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                'Transação não encontrada.',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+
+        return ReleaseDetailsPage(transaction: transaction);
       },
     ),
 
     GoRoute(
       path: '/HomePage',
       builder: (context, state) {
-        return const HomePage();
+        return HomePage(
+          pageController: PageController(),
+          controller: NotchBottomBarController(),
+        );
       },
     ),
+
     GoRoute(
       path: '/CategoriesPage',
       builder: (context, state) {
         return const CategoriesPage();
       },
     ),
+
+    // =========================
+    // Extrato da categoria
+    // =========================
     GoRoute(
-      path: '/GastosCategoria',
+      path: '/CategoryExtractPage',
       builder: (context, state) {
-        return const GastosCategoria();
+        final category = state.extra;
+
+        if (category is! Category) {
+          return const CategoriesPage();
+        }
+
+        return CategoryExtractPage(category: category);
       },
     ),
+
     GoRoute(
       path: '/SettingsPage',
       builder: (context, state) {
         return const SettingsPage();
+      },
+    ),
+
+    GoRoute(
+      path: '/MainHomePage',
+      builder: (context, state) {
+        return const HomePageSetion();
+      },
+    ),
+
+    GoRoute(
+      path: '/extract',
+      builder: (context, state) {
+        return const ExtractPage();
       },
     ),
   ],

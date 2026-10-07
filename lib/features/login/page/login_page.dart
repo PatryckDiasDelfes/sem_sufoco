@@ -1,207 +1,152 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
-import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/login/controller/login_controller.dart';
+import 'package:sem_sufoco/features/login/page/auth_error_banner.dart';
+import 'package:sem_sufoco/features/login/page/auth_text_field.dart';
+import 'package:sem_sufoco/features/login/page/labeled_divider.dart';
+import 'package:sem_sufoco/features/login/page/login_header.dart';
+import 'package:sem_sufoco/features/login/page/primary_button.dart';
+import 'package:sem_sufoco/features/login/page/social_login_row.dart';
 
-class LoginPage extends StatefulWidget {
+/// Apenas injeta o controller. Se preferir, mova esse Provider para o router.
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => LoginPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<LoginController>(
+      create: (_) => LoginController(),
+      child: const _LoginView(),
+    );
+  }
 }
 
-class LoginPageState extends State<LoginPage> {
+class _LoginView extends StatelessWidget {
+  const _LoginView();
+
+  Future<void> _handle(BuildContext context, Future<bool> future) async {
+    final success = await future;
+    if (success && context.mounted) context.go('/MainHomePage');
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 1. Injetamos o Provider no topo da hierarquia desta tela
-    return ChangeNotifierProvider<LoginController>(
-      create: (context) => LoginController(),
-      child: Scaffold(
-        backgroundColor: AppColors.black,
-        appBar: AppBar(
-          backgroundColor: AppColors.black,
-          title: Text(
-            'ENTRAR',
-            style: AppTextStyle.headingLarge.copyWith(color: AppColors.white),
+    final controller = context.watch<LoginController>();
+
+    return Scaffold(
+      backgroundColor: AppColors.backGround,
+      appBar: AppBar(
+        backgroundColor: AppColors.backGround,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        title: const Text(
+          'Entrar',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
           ),
-          //subtitle: const Text('Bem-vindo ao Sem Sufoco'),
         ),
-        body: SafeArea(
-          // 2. O Consumer agora encontra o Provider que criamos acima
-          child: Consumer<LoginController>(
-            builder: (context, controller, child) {
-              return Form(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 20),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: controller.formKey,
+          child: ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            children: [
+              const LoginHeader(),
+              const SizedBox(height: 28),
 
-                      TextFormField(
-                        cursorColor: AppColors.white,
-                        decoration: InputDecoration(
-                          labelText: 'E-mail',
-                          labelStyle: AppTextStyle.bodySmall.copyWith(
-                            color: AppColors.gray200,
-                          ),
+              if (controller.errorMessage != null) ...[
+                AuthErrorBanner(message: controller.errorMessage!),
+                const SizedBox(height: 16),
+              ],
 
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: AppColors.colorsTheme,
-                              width: 1,
-                            ),
-                          ),
+              AuthTextField(
+                controller: controller.emailController,
+                label: 'E-mail',
+                icon: Icons.mail_outline_rounded,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.email],
+                enabled: !controller.isLoading,
+                validator: controller.validateEmail,
+                onChanged: (_) => controller.clearError(),
+              ),
+              const SizedBox(height: 16),
 
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: AppColors.primary,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      TextFormField(
-                        cursorColor: AppColors.white,
-                        decoration: InputDecoration(
-                          labelText: 'Senha',
-                          labelStyle: AppTextStyle.bodySmall.copyWith(
-                            color: AppColors.gray200,
-                          ),
-
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: AppColors.colorsTheme,
-                              width: 1,
-                            ),
-                          ),
-
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: AppColors.primary,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 60),
-
-                      ElevatedButton(
-                        onPressed: () {
-                          context.push('/HomePage');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.black,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-
-                          minimumSize: const Size(double.infinity, 50),
-                        ),
-                        child: const Text(
-                          'ENTRAR',
-                          style: AppTextStyle.headingSmall,
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      ElevatedButton(
-                        onPressed: () {
-                          context.push('/TransactionPage');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.black,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-
-                          minimumSize: const Size(double.infinity, 50),
-                        ),
-                        child: const Text(
-                          'Teste',
-                          style: AppTextStyle.headingSmall,
-                        ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            height: 1,
-                            color: AppColors.colorsTheme,
-                            width: 125,
-                          ),
-                          Container(
-                            height: 1,
-                            color: AppColors.colorsTheme,
-                            width: 125,
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      Column(
-                        children: [
-                          const Text(
-                            'Logue com',
-                            style: AppTextStyle.inputLabel,
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/google.svg',
-                                width: 30,
-                                height: 30,
-                              ),
-                              const SizedBox(width: 30),
-                              SvgPicture.asset(
-                                'assets/icons/facebook.svg',
-                                width: 30,
-                                height: 30,
-                              ),
-                              const SizedBox(width: 30),
-                              SvgPicture.asset(
-                                'assets/icons/X.svg',
-                                width: 30,
-                                height: 30,
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.white,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+              AuthTextField(
+                controller: controller.passwordController,
+                label: 'Senha',
+                icon: Icons.lock_outline_rounded,
+                obscureText: controller.obscurePassword,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.password],
+                enabled: !controller.isLoading,
+                validator: controller.validatePassword,
+                onChanged: (_) => controller.clearError(),
+                onSubmitted: (_) => _handle(context, controller.submit()),
+                suffix: IconButton(
+                  onPressed: controller.toggleObscurePassword,
+                  icon: Icon(
+                    controller.obscurePassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 20,
+                    color: AppColors.gray200,
                   ),
                 ),
-              );
-            },
+              ),
+
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: controller.isLoading
+                      ? null
+                      : () {
+                          // TODO: context.push('/forgot-password');
+                        },
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    textStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text('Esqueci minha senha'),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              PrimaryButton(
+                label: 'ENTRAR',
+                isLoading: controller.isLoading,
+                onPressed: () => _handle(context, controller.submit()),
+              ),
+
+              // Atalho de desenvolvimento: só aparece em debug.
+              if (kDebugMode) ...[
+                const SizedBox(height: 12),
+                PrimaryButton(
+                  label: 'Teste',
+                  onPressed: () => context.push('/extract'),
+                ),
+              ],
+
+              const SizedBox(height: 32),
+              const LabeledDivider(label: 'ou entre com'),
+              const SizedBox(height: 24),
+
+              SocialLoginRow(
+                enabled: !controller.isLoading,
+                onSelected: (provider) =>
+                    _handle(context, controller.loginWithSocial(provider)),
+              ),
+            ],
           ),
         ),
       ),

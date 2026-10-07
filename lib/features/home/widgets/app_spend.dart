@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
@@ -13,6 +14,7 @@ class AppSpend extends StatelessWidget {
     required this.category,
     required this.name,
     required this.priceColor,
+    required this.type,
   });
 
   final Widget icone;
@@ -21,10 +23,17 @@ class AppSpend extends StatelessWidget {
   final String category;
   final String name;
   final Color priceColor;
+  final TransactionType type;
 
   @override
   Widget build(BuildContext context) {
-    Utils utils = Utils();
+    final utils = Utils();
+
+    final isIncome = type == TransactionType.income;
+
+    final formattedPrice = utils.formatCurrency(price);
+
+    final displayPrice = isIncome ? '+ $formattedPrice' : '- $formattedPrice';
 
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -69,7 +78,7 @@ class AppSpend extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            utils.formatCurrency(price),
+                            displayPrice,
                             style: AppTextStyle.homePriceRed.copyWith(
                               color: priceColor,
                             ),
@@ -85,7 +94,7 @@ class AppSpend extends StatelessWidget {
                     ],
                   ),
 
-                  AppLine(size: 1),
+                  const AppLine(size: 1),
                 ],
               ),
             ),

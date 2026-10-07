@@ -98,6 +98,7 @@ class AppExtract extends StatelessWidget {
                 // Ícone
                 // =========================
                 icone: Icon(category.icon),
+                type: transaction.type,
               ),
             );
           }),

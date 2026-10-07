@@ -55,6 +55,57 @@ class TransactionController extends ChangeNotifier {
   }
 
   // =========================
+  // Salvar Transação
+  // =========================
+
+  String? saveTransaction({
+    required String establishment,
+    required String amount,
+    required String description,
+    required String categoryId,
+    required DateTime? date,
+    required TimeOfDay? time,
+    required PaymentMethod? paymentMethod,
+    required TransactionType type,
+  }) {
+    if (date == null || time == null) {
+      return 'Selecione a data e o horário.';
+    }
+
+    if (categoryId.trim().isEmpty) {
+      return 'Selecione uma categoria.';
+    }
+
+    if (paymentMethod == null) {
+      return 'Selecione uma forma de pagamento.';
+    }
+
+    final parsedAmount = double.tryParse(amount.replaceAll(',', '.'));
+
+    if (parsedAmount == null) {
+      return 'Informe um valor válido.';
+    }
+
+    final purchasedAt = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    return addTransaction(
+      establishment: establishment,
+      amount: parsedAmount,
+      description: description,
+      categoryId: categoryId,
+      purchasedAt: purchasedAt,
+      paymentMethod: paymentMethod,
+      type: type,
+    );
+  }
+
+  // =========================
   // Editar
   // =========================
 
@@ -133,8 +184,8 @@ class TransactionController extends ChangeNotifier {
 
   Transaction? getById(String id) {
     try {
-      return _transactions.firstWhere((transaction) => transaction.id == id);
-    } catch (_) {
+      return transactions.firstWhere((transaction) => transaction.id == id);
+    } catch (e) {
       return null;
     }
   }

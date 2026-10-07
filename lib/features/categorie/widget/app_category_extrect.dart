@@ -49,6 +49,7 @@ class AppCategoryExtrect extends StatelessWidget {
               priceColor: transaction.type == TransactionType.income
                   ? AppColors.grenLive
                   : AppColors.danger,
+              type: transaction.type,
             ),
           ),
         ),

@@ -12,7 +12,6 @@ import 'package:sem_sufoco/features/home/pages/home_page_setion.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
 import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
 import 'package:sem_sufoco/features/settings/pages/settings_page.dart';
-import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',

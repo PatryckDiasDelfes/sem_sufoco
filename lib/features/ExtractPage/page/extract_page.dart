@@ -98,7 +98,7 @@ class ExtractPage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'R\$ ${balance.toStringAsFixed(2)}',
-                      style: AppTextStyle.title!.copyWith(
+                      style: AppTextStyle.title.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),

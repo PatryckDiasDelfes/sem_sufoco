@@ -35,7 +35,7 @@ class AppColors {
   static const Color grenLive = Color.fromARGB(255, 80, 250, 32);
   static const Color red = Colors.red;
   static const Color pink = Colors.pink;
-
+static const Color logo = Color(0xFF0F1B1B);
   static const Color backGround = Color.fromARGB(255, 1, 28, 22);
   static const Color grey = Colors.grey;
 }

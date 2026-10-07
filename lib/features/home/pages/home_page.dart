@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userName = 'Rafael';
+    String userName = 'Vitor';
     return Scaffold(
       backgroundColor: AppColors.backGround,
       appBar: AppBarCustom(userName: userName),

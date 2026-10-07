@@ -12,6 +12,7 @@ class TransactionInfoField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
+    this.value,
   });
 
   final String labelTitle;
@@ -20,6 +21,7 @@ class TransactionInfoField extends StatelessWidget {
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
   final bool readOnly;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {

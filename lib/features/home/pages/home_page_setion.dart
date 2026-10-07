@@ -28,7 +28,10 @@ class _HomePageSetion extends State<HomePageSetion> {
         controller: _pageController,
 
         children: [
-          TransactionPage(),
+          TransactionPage(
+            controller: controller,
+            pageController: _pageController,
+          ),
           HomePage(controller: controller, pageController: _pageController),
           CategoriesPage(),
         ],

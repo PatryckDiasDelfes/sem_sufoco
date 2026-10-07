@@ -10,7 +10,17 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionController()),
-        ChangeNotifierProvider(create: (_) => GraphicController()),
+
+        ChangeNotifierProxyProvider<TransactionController, GraphicController>(
+          create: (_) => GraphicController(transactions: []),
+          update: (_, transactionController, graphicController) {
+            graphicController!.updateTransactions(
+              transactionController.transactions,
+            );
+
+            return graphicController;
+          },
+        ),
       ],
       child: const MainApp(),
     ),

@@ -1,3 +1,4 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sem_sufoco/core/model/category.dart';
@@ -11,7 +12,6 @@ import 'package:sem_sufoco/features/home/pages/home_page_setion.dart';
 import 'package:sem_sufoco/features/login/page/login_page.dart';
 import 'package:sem_sufoco/features/release_details/page/release_details_page.dart';
 import 'package:sem_sufoco/features/settings/pages/settings_page.dart';
-import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -46,16 +46,12 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/TransactionPage',
-      builder: (context, state) {
-        return const TransactionPage();
-      },
-    ),
-
-    GoRoute(
       path: '/HomePage',
       builder: (context, state) {
-        return const HomePage();
+        return HomePage(
+          pageController: PageController(),
+          controller: NotchBottomBarController(),
+        );
       },
     ),
 

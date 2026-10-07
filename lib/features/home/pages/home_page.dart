@@ -9,10 +9,14 @@ import 'package:sem_sufoco/features/categorie/widget/card_category_setion.dart';
 import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({this.pageController, this.controller, super.key});
+  const HomePage({
+    required this.pageController,
+    required this.controller,
+    super.key,
+  });
 
-  final PageController? pageController;
-  final NotchBottomBarController? controller;
+  final PageController pageController;
+  final NotchBottomBarController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +47,8 @@ class HomePage extends StatelessWidget {
                 ),
 
                 AppExtract(
-                  pageController: pageController!,
-                  controller: controller!,
+                  pageController: pageController,
+                  controller: controller,
                   limit: 6,
                 ),
               ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
 
 class TransactionController extends ChangeNotifier {

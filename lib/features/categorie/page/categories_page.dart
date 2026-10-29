@@ -10,10 +10,7 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CategoryController()..loadCategories(),
-      child: const _CategoriesView(),
-    );
+    return const _CategoriesView();
   }
 }
 
@@ -28,12 +25,58 @@ class _CategoriesView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<CategoryController>();
 
+    // =========================
+    // Carregamento
+    // =========================
+
+    if (controller.isLoading && controller.categories.isEmpty) {
+      return const Scaffold(
+        backgroundColor: AppColors.backGround,
+        body: Center(child: CircularProgressIndicator(color: AppColors.accent)),
+      );
+    }
+
+    // =========================
+    // Tratamento de Erros
+    // =========================
+
+    if (controller.errorMessage != null && controller.categories.isEmpty) {
+      return Scaffold(
+        backgroundColor: AppColors.backGround,
+        appBar: AppBar(
+          backgroundColor: AppColors.backGround,
+          foregroundColor: Colors.white,
+          title: const Text('Categorias'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  controller.errorMessage!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => controller.refreshCategories(),
+                  child: const Text('Tentar novamente'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // =========================
+    // Página de Categorias
+    // =========================
+
     return Scaffold(
       backgroundColor: AppColors.backGround,
-
-      // =========================
-      // AppBar
-      // =========================
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.backGround,
@@ -43,13 +86,11 @@ class _CategoriesView extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-
-      // =========================
-      // Categorias
-      // =========================
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: RefreshIndicator(
+        onRefresh: controller.refreshCategories,
+        color: AppColors.accent,
         child: GridView.builder(
+          padding: const EdgeInsets.all(16),
           itemCount: controller.categories.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -81,6 +122,7 @@ class _CategoriesView extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       category.name,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: AppColors.white,
                         fontWeight: FontWeight.bold,

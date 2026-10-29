@@ -14,6 +14,7 @@ class HomePageSetion extends StatefulWidget {
 
 class _HomePageSetion extends State<HomePageSetion> {
   final PageController _pageController = PageController(initialPage: 1);
+
   final NotchBottomBarController controller = NotchBottomBarController(
     index: 1,
   );
@@ -24,19 +25,16 @@ class _HomePageSetion extends State<HomePageSetion> {
       extendBody: true,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
-
         controller: _pageController,
-
         children: [
           TransactionPage(
             controller: controller,
             pageController: _pageController,
           ),
           HomePage(controller: controller, pageController: _pageController),
-          CategoriesPage(),
+          const CategoriesPage(),
         ],
       ),
-
       bottomNavigationBar: AppNavigatorBar(
         pageController: _pageController,
         controller: controller,

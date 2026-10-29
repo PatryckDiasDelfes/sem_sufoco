@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/login/controller/login_controller.dart';
-import 'package:sem_sufoco/features/login/page/auth_error_banner.dart';
-import 'package:sem_sufoco/features/login/page/auth_text_field.dart';
-import 'package:sem_sufoco/features/login/page/labeled_divider.dart';
-import 'package:sem_sufoco/features/login/page/login_header.dart';
-import 'package:sem_sufoco/features/login/page/primary_button.dart';
-import 'package:sem_sufoco/features/login/page/social_login_row.dart';
+import 'package:sem_sufoco/features/login/widget/auth_error_banner.dart';
+import 'package:sem_sufoco/features/login/widget/auth_text_field.dart';
+import 'package:sem_sufoco/features/login/widget/labeled_divider.dart';
+import 'package:sem_sufoco/features/login/widget/login_header.dart';
+import 'package:sem_sufoco/features/login/widget/primary_button.dart';
+import 'package:sem_sufoco/features/login/widget/social_login_row.dart';
 
 /// Apenas injeta o controller. Se preferir, mova esse Provider para o router.
 class LoginPage extends StatelessWidget {
@@ -43,7 +43,7 @@ class _LoginView extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: const Text(
-          'Entrar',
+          'Login',
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 18,
@@ -134,6 +134,11 @@ class _LoginView extends StatelessWidget {
                 PrimaryButton(
                   label: 'Teste',
                   onPressed: () => context.push('/extract'),
+                ),
+                const SizedBox(height: 12),
+                PrimaryButton(
+                  label: 'Faça sua conta',
+                  onPressed: () => context.go('/register'),
                 ),
               ],
 

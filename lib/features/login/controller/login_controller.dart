@@ -1,25 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum SocialProvider { google, facebook, x }
 
 class LoginController extends ChangeNotifier {
+  LoginController() {
+    _loadRememberedEmail();
+  }
+
+  // =========================
+  // Controllers
+  // =========================
+
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  // =========================
+  // Estados
+  // =========================
+
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _rememberMe = false;
   String? _errorMessage;
   bool _disposed = false;
 
   bool get obscurePassword => _obscurePassword;
   bool get isLoading => _isLoading;
+  bool get rememberMe => _rememberMe;
   String? get errorMessage => _errorMessage;
 
   // =========================
   // Validações
   // =========================
+
   static final _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
   String? validateEmail(String? value) {
@@ -35,6 +51,7 @@ class LoginController extends ChangeNotifier {
     final password = value ?? '';
 
     if (password.isEmpty) return 'Informe sua senha';
+
     if (password.length < 6) {
       return 'A senha deve ter ao menos 6 caracteres';
     }
@@ -45,8 +62,14 @@ class LoginController extends ChangeNotifier {
   // =========================
   // Ações
   // =========================
+
   void toggleObscurePassword() {
     _obscurePassword = !_obscurePassword;
+    _notify();
+  }
+
+  void toggleRememberMe() {
+    _rememberMe = !_rememberMe;
     _notify();
   }
 
@@ -58,8 +81,42 @@ class LoginController extends ChangeNotifier {
   }
 
   // =========================
+  // Lembrar de Mim
+  // =========================
+
+  Future<void> _loadRememberedEmail() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      final savedEmail = prefs.getString('remembered_login_email');
+
+      if (savedEmail != null && savedEmail.isNotEmpty) {
+        emailController.text = savedEmail;
+        _rememberMe = true;
+        _notify();
+      }
+    } catch (error) {
+      debugPrint('Erro ao carregar e-mail salvo: $error');
+    }
+  }
+
+  Future<void> _saveRememberedEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (_rememberMe) {
+      await prefs.setString(
+        'remembered_login_email',
+        emailController.text.trim(),
+      );
+    } else {
+      await prefs.remove('remembered_login_email');
+    }
+  }
+
+  // =========================
   // Login com Supabase
   // =========================
+
   Future<bool> submit() async {
     if (_isLoading) return false;
 
@@ -70,7 +127,7 @@ class LoginController extends ChangeNotifier {
       return false;
     }
 
-    return _run(() async {
+    final success = await _run(() async {
       final email = emailController.text.trim();
       final password = passwordController.text;
 
@@ -79,11 +136,22 @@ class LoginController extends ChangeNotifier {
         password: password,
       );
     });
+
+    if (success) {
+      try {
+        await _saveRememberedEmail();
+      } catch (error) {
+        debugPrint('Erro ao salvar e-mail: $error');
+      }
+    }
+
+    return success;
   }
 
   // =========================
   // Login Social
   // =========================
+
   Future<bool> loginWithSocial(SocialProvider provider) async {
     if (_isLoading) return false;
 
@@ -98,6 +166,7 @@ class LoginController extends ChangeNotifier {
   // =========================
   // Execução e Tratamento de Erros
   // =========================
+
   Future<bool> _run(Future<void> Function() action) async {
     _isLoading = true;
     _errorMessage = null;
@@ -121,6 +190,7 @@ class LoginController extends ChangeNotifier {
       return false;
     } catch (error) {
       debugPrint('Erro inesperado no login: $error');
+
       _errorMessage =
           'Erro de conexão. Verifique sua internet e tente novamente.';
 
@@ -134,9 +204,14 @@ class LoginController extends ChangeNotifier {
   // =========================
   // Atualização da Interface
   // =========================
+
   void _notify() {
     if (!_disposed) notifyListeners();
   }
+
+  // =========================
+  // Dispose
+  // =========================
 
   @override
   void dispose() {

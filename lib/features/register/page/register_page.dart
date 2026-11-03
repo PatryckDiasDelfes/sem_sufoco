@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/login/controller/login_controller.dart';
 import 'package:sem_sufoco/features/login/widget/auth_text_field.dart';
@@ -20,25 +21,62 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // Validar formulário
-  void _register(RegisterController controller) {
+  // =========================
+  // Cadastro
+  // =========================
+
+  Future<void> _register(RegisterController controller) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Cadastro validado! Próxima etapa: integrar o Supabase.'),
-      ),
-    );
+    final success = await controller.register();
+
+    if (!mounted) return;
+
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            controller.errorMessage ?? 'Erro ao realizar cadastro.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (controller.requiresEmailConfirmation) {
+      context.go('/login');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Conta criada! Verifique seu e-mail para confirmar o cadastro.',
+          ),
+        ),
+      );
+    } else {
+      context.go('/MainHomePage');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Conta criada com sucesso!')),
+      );
+    }
   }
 
-  // Cadastro social ainda não implementado
+  // =========================
+  // Cadastro Social
+  // =========================
+
   void _onSocialSelected(SocialProvider provider) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Cadastro social ainda não implementado.')),
     );
   }
+
+  // =========================
+  // Build
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +183,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         // Botão de cadastro
                         PrimaryButton(
                           label: 'Criar conta',
-                          onPressed: () => _register(controller),
+                          isLoading: controller.isLoading,
+                          onPressed: controller.isLoading
+                              ? null
+                              : () => _register(controller),
                         ),
 
                         const SizedBox(height: 28),

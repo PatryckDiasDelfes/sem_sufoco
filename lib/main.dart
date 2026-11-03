@@ -14,6 +14,10 @@ Future<void> main() async {
     url: 'https://codkqbpcgpafyrjgkvjh.supabase.co',
     publishableKey: 'sb_publishable_JJYwmwGeT2ad6YMHEM-OPw__2riqxqQ',
   );
+  final session = Supabase.instance.client.auth.currentSession;
+
+  debugPrint('Sessão encontrada: ${session != null}');
+  debugPrint('Usuário: ${session?.user.email}');
 
   runApp(
     MultiProvider(
@@ -44,6 +48,7 @@ Future<void> main() async {
           },
         ),
       ],
+
       child: const MainApp(),
     ),
   );

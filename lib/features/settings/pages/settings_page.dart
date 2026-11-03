@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/features/settings/widgets/profile_card.dart';
 import 'package:sem_sufoco/features/settings/widgets/settings_section.dart';
@@ -15,6 +17,41 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _notifications = true;
   bool _darkMode = true;
+  bool _isLoggingOut = false;
+
+  // =========================
+  // Logout
+  // =========================
+
+  Future<void> _logout() async {
+    if (_isLoggingOut) return;
+
+    setState(() => _isLoggingOut = true);
+
+    try {
+      await Supabase.instance.client.auth.signOut();
+
+      if (!mounted) return;
+
+      context.go('/login');
+    } catch (error) {
+      debugPrint('Erro ao realizar logout: $error');
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível sair da conta. Tente novamente.'),
+        ),
+      );
+
+      setState(() => _isLoggingOut = false);
+    }
+  }
+
+  // =========================
+  // Build
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
         children: [
-          ProfileCard(
-            name: 'Samuel Cabral',
-            email: 'qualquercoisablumenau@gmail.com',
-            onTap: () {},
-          ),
+          ProfileCard(onTap: () {}),
           const SizedBox(height: 28),
 
           SettingsSection(
@@ -151,7 +184,7 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(
             height: 48,
             child: TextButton.icon(
-              onPressed: () => context.go('/login'),
+              onPressed: _isLoggingOut ? null : _logout,
               style: TextButton.styleFrom(
                 backgroundColor: AppColors.danger.withValues(alpha: 0.08),
                 foregroundColor: AppColors.danger,
@@ -163,8 +196,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              icon: const Icon(Icons.logout_rounded, size: 18),
-              label: const Text('Sair da conta'),
+              icon: _isLoggingOut
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.logout_rounded, size: 18),
+              label: Text(_isLoggingOut ? 'Saindo...' : 'Sair da conta'),
             ),
           ),
           const SizedBox(height: 20),

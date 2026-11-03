@@ -14,7 +14,7 @@ import 'package:sem_sufoco/features/settings/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sem_sufoco/features/register/controller/register_controller.dart';
 import 'package:sem_sufoco/features/register/page/register_page.dart';
-import 'package:sem_sufoco/shared/splash/splash_screen.dart';
+import 'package:sem_sufoco/shared/splash/page/splash_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',

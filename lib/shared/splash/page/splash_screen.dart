@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sem_sufoco/shared/splash/controller/splash_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,42 +15,74 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
 
+  late final SplashController _controller;
+
+  // =========================
+  // Inicialização
+  // =========================
+
   @override
   void initState() {
     super.initState();
 
-    // Criar o AnimationController
+    _controller = SplashController();
+
+    _setupAnimations();
+
+    _animationController.forward();
+
+    _navigate();
+  }
+
+  // =========================
+  // Configuração das Animações
+  // =========================
+
+  void _setupAnimations() {
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
 
-    // Animação de escala (cresce de 0.5 para 1.0)
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
-    // Animação de opacity (aparece gradualmente)
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
-
-    // Iniciar a animação
-    _animationController.forward();
-
-    // Navegar para login após 2 segundos
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      if (mounted) {
-        context.go('/login');
-      }
-    });
   }
+
+  // =========================
+  // Navegação
+  // =========================
+
+  Future<void> _navigate() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!mounted) return;
+
+    final destination = await _controller.checkSession();
+
+    if (!mounted) return;
+
+    context.go(destination);
+  }
+
+  // =========================
+  // Dispose
+  // =========================
 
   @override
   void dispose() {
     _animationController.dispose();
+    _controller.dispose();
     super.dispose();
   }
+
+  // =========================
+  // Interface
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +92,6 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo com animação
             AnimatedBuilder(
               animation: _animationController,
               builder: (context, child) {
@@ -78,7 +110,6 @@ class _SplashScreenState extends State<SplashScreen>
               },
             ),
             const SizedBox(height: 30),
-            // Texto com animação
             AnimatedBuilder(
               animation: _fadeAnimation,
               builder: (context, child) {
@@ -88,10 +119,11 @@ class _SplashScreenState extends State<SplashScreen>
                     children: [
                       Text(
                         'sem sufoco',
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          color: const Color(0xFF1FD9A3),
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.displayMedium
+                            ?.copyWith(
+                              color: const Color(0xFF1FD9A3),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 10),
                       Text(

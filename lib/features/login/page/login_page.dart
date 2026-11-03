@@ -27,10 +27,21 @@ class LoginPage extends StatelessWidget {
 class _LoginView extends StatelessWidget {
   const _LoginView();
 
+  // =========================
+  // Autenticação
+  // =========================
+
   Future<void> _handle(BuildContext context, Future<bool> future) async {
     final success = await future;
-    if (success && context.mounted) context.go('/MainHomePage');
+
+    if (success && context.mounted) {
+      context.go('/MainHomePage');
+    }
   }
+
+  // =========================
+  // Interface
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +72,17 @@ class _LoginView extends StatelessWidget {
               const LoginHeader(),
               const SizedBox(height: 28),
 
+              // =========================
+              // Mensagem de Erro
+              // =========================
               if (controller.errorMessage != null) ...[
                 AuthErrorBanner(message: controller.errorMessage!),
                 const SizedBox(height: 16),
               ],
 
+              // =========================
+              // E-mail
+              // =========================
               AuthTextField(
                 controller: controller.emailController,
                 label: 'E-mail',
@@ -79,6 +96,9 @@ class _LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
+              // =========================
+              // Senha
+              // =========================
               AuthTextField(
                 controller: controller.passwordController,
                 label: 'Senha',
@@ -102,33 +122,67 @@ class _LoginView extends StatelessWidget {
                 ),
               ),
 
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: controller.isLoading
-                      ? null
-                      : () {
-                          // TODO: context.push('/forgot-password');
-                        },
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    textStyle: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+              const SizedBox(height: 8),
+
+              // =========================
+              // Lembrar de Mim e Recuperar Senha
+              // =========================
+              Row(
+                children: [
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: controller.rememberMe,
+                      onChanged: controller.isLoading
+                          ? null
+                          : (_) => controller.toggleRememberMe(),
+                      title: const Text(
+                        'Lembrar de mim',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      activeColor: AppColors.primary,
+                      checkColor: Colors.black,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      visualDensity: VisualDensity.compact,
                     ),
                   ),
-                  child: const Text('Esqueci minha senha'),
-                ),
+
+                  TextButton(
+                    onPressed: controller.isLoading
+                        ? null
+                        : () {
+                            // TODO: context.push('/forgot-password');
+                          },
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      textStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    child: const Text('Esqueci minha senha'),
+                  ),
+                ],
               ),
+
               const SizedBox(height: 20),
 
+              // =========================
+              // Botão Entrar
+              // =========================
               PrimaryButton(
                 label: 'ENTRAR',
                 isLoading: controller.isLoading,
                 onPressed: () => _handle(context, controller.submit()),
               ),
 
-              // Atalho de desenvolvimento: só aparece em debug.
+              // =========================
+              // Atalhos de Desenvolvimento
+              // =========================
               if (kDebugMode) ...[
                 const SizedBox(height: 12),
                 PrimaryButton(
@@ -143,6 +197,10 @@ class _LoginView extends StatelessWidget {
               ],
 
               const SizedBox(height: 32),
+
+              // =========================
+              // Login Social
+              // =========================
               const LabeledDivider(label: 'ou entre com'),
               const SizedBox(height: 24),
 

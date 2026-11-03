@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterController extends ChangeNotifier {
-  // Controllers dos campos
+  // =========================
+  // Controllers dos Campos
+  // =========================
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Visibilidade das senhas
+  // =========================
+  // Estados
+  // =========================
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
+  bool _requiresEmailConfirmation = false;
 
   bool get obscurePassword => _obscurePassword;
   bool get obscureConfirmPassword => _obscureConfirmPassword;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+  bool get requiresEmailConfirmation => _requiresEmailConfirmation;
 
-  // Alternar visibilidade da senha
+  // =========================
+  // Visibilidade das Senhas
+  // =========================
+
   void togglePasswordVisibility() {
     _obscurePassword = !_obscurePassword;
     notifyListeners();
@@ -25,7 +41,10 @@ class RegisterController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Validar nome
+  // =========================
+  // Validações
+  // =========================
+
   String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Informe seu nome.';
@@ -38,7 +57,6 @@ class RegisterController extends ChangeNotifier {
     return null;
   }
 
-  // Validar e-mail
   String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Informe seu e-mail.';
@@ -51,7 +69,6 @@ class RegisterController extends ChangeNotifier {
     return null;
   }
 
-  // Validar senha
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Informe uma senha.';
@@ -64,7 +81,6 @@ class RegisterController extends ChangeNotifier {
     return null;
   }
 
-  // Confirmar senha
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Confirme sua senha.';
@@ -76,6 +92,45 @@ class RegisterController extends ChangeNotifier {
 
     return null;
   }
+
+  // =========================
+  // Cadastro Supabase
+  // =========================
+
+  Future<bool> register() async {
+    if (_isLoading) return false;
+
+    _isLoading = true;
+    _errorMessage = null;
+    _requiresEmailConfirmation = false;
+    notifyListeners();
+
+    try {
+      final response = await Supabase.instance.client.auth.signUp(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+        data: {'full_name': nameController.text.trim()},
+      );
+
+      _requiresEmailConfirmation = response.session == null;
+
+      return true;
+    } on AuthException catch (error) {
+      _errorMessage = error.message;
+      return false;
+    } catch (error) {
+      debugPrint('Erro no cadastro: $error');
+      _errorMessage = 'Não foi possível realizar o cadastro. Tente novamente.';
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // =========================
+  // Dispose
+  // =========================
 
   @override
   void dispose() {

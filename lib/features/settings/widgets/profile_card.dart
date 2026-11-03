@@ -1,23 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({
-    super.key,
-    required this.name,
-    required this.email,
-    this.onTap,
-  });
+  const ProfileCard({super.key, this.onTap});
 
-  final String name;
-  final String email;
   final VoidCallback? onTap;
 
+  // =========================
+  // Dados do Usuário
+  // =========================
+
+  User? get _user => Supabase.instance.client.auth.currentUser;
+
+  String get _name {
+    final user = _user;
+
+    if (user == null) return 'Usuário';
+
+    final metadata = user.userMetadata;
+
+    final name =
+        metadata?['name'] ??
+        metadata?['full_name'] ??
+        metadata?['display_name'];
+
+    if (name != null && name.toString().trim().isNotEmpty) {
+      return name.toString().trim();
+    }
+
+    return user.email?.split('@').first ?? 'Usuário';
+  }
+
+  String get _email {
+    return _user?.email ?? 'E-mail não disponível';
+  }
+
   String get _initials {
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length == 1) return parts.first[0].toUpperCase();
+    final parts = _name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .toList();
+
+    if (parts.isEmpty) return '?';
+
+    if (parts.length == 1) {
+      return parts.first[0].toUpperCase();
+    }
+
     return (parts.first[0] + parts.last[0]).toUpperCase();
   }
+
+  // =========================
+  // Build
+  // =========================
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +99,7 @@ class ProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      _name,
                       style: const TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 15,
@@ -70,7 +108,7 @@ class ProfileCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      email,
+                      _email,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: AppColors.textMuted,

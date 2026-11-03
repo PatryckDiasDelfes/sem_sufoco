@@ -88,15 +88,26 @@ class LoginController extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      final savedEmail = prefs.getString('remembered_login_email');
+      _rememberMe = prefs.getBool('remember_me') ?? false;
 
-      if (savedEmail != null && savedEmail.isNotEmpty) {
-        emailController.text = savedEmail;
-        _rememberMe = true;
-        _notify();
+      if (_rememberMe) {
+        emailController.text = prefs.getString('remembered_login_email') ?? '';
       }
+
+      _notify();
     } catch (error) {
-      debugPrint('Erro ao carregar e-mail salvo: $error');
+      debugPrint('Erro ao carregar preferência de login: $error');
+    }
+  }
+
+  Future<void> _saveRememberMePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Salva a escolha antes de autenticar no Supabase.
+    await prefs.setBool('remember_me', _rememberMe);
+
+    if (!_rememberMe) {
+      await prefs.remove('remembered_login_email');
     }
   }
 
@@ -108,8 +119,6 @@ class LoginController extends ChangeNotifier {
         'remembered_login_email',
         emailController.text.trim(),
       );
-    } else {
-      await prefs.remove('remembered_login_email');
     }
   }
 
@@ -123,6 +132,19 @@ class LoginController extends ChangeNotifier {
     _errorMessage = null;
 
     if (!(formKey.currentState?.validate() ?? false)) {
+      _notify();
+      return false;
+    }
+
+    try {
+      // Primeiro registra a preferência.
+      await _saveRememberMePreference();
+    } catch (error) {
+      debugPrint('Erro ao salvar preferência: $error');
+
+      _errorMessage =
+          'Não foi possível salvar sua preferência. Tente novamente.';
+
       _notify();
       return false;
     }

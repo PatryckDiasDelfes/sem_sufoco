@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sem_sufoco/core/service/secure_auth_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:sem_sufoco/core/routes/app_router.dart';
 import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
 import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
+// =========================
+// Inicialização
+// =========================
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,11 +18,23 @@ Future<void> main() async {
   await Supabase.initialize(
     url: 'https://codkqbpcgpafyrjgkvjh.supabase.co',
     publishableKey: 'sb_publishable_JJYwmwGeT2ad6YMHEM-OPw__2riqxqQ',
+
+    // Armazenamento seguro da sessão.
+    authOptions: FlutterAuthClientOptions(localStorage: SecureAuthStorage()),
   );
+
+  // =========================
+  // Verificação da Sessão
+  // =========================
+
   final session = Supabase.instance.client.auth.currentSession;
 
   debugPrint('Sessão encontrada: ${session != null}');
   debugPrint('Usuário: ${session?.user.email}');
+
+  // =========================
+  // Inicialização do Aplicativo
+  // =========================
 
   runApp(
     MultiProvider(
@@ -48,11 +65,14 @@ Future<void> main() async {
           },
         ),
       ],
-
       child: const MainApp(),
     ),
   );
 }
+
+// =========================
+// Aplicativo Principal
+// =========================
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

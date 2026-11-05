@@ -2,14 +2,13 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
+import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
 import 'package:sem_sufoco/features/home/widgets/app_extract_head.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
 import 'package:sem_sufoco/features/home/widgets/app_spend.dart';
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
-import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class AppExtract extends StatelessWidget {
   const AppExtract({
@@ -34,6 +33,14 @@ class AppExtract extends StatelessWidget {
     final transactions = limit == null
         ? transactionController.transactions
         : transactionController.transactions.take(limit!).toList();
+
+    // =========================
+    // Categorias
+    // =========================
+
+    final categoryController = context.watch<CategoryController>();
+
+    final categories = categoryController.categories;
 
     return Container(
       padding: const EdgeInsets.only(bottom: 16),
@@ -62,9 +69,13 @@ class AppExtract extends StatelessWidget {
           // Transações
           // =========================
           ...transactions.map((transaction) {
-            final category = mockCategories.firstWhere(
+            final matchingCategories = categories.where(
               (category) => category.id == transaction.categoryId,
             );
+
+            final category = matchingCategories.isEmpty
+                ? null
+                : matchingCategories.first;
 
             // =========================
             // Tipo da transação
@@ -78,7 +89,7 @@ class AppExtract extends StatelessWidget {
               },
               child: AppSpend(
                 name: transaction.establishment,
-                category: category.name,
+                category: category?.name ?? 'Categoria não encontrada',
                 price: transaction.amount,
 
                 // =========================
@@ -97,7 +108,10 @@ class AppExtract extends StatelessWidget {
                 // =========================
                 // Ícone
                 // =========================
-                icone: Icon(category.icon),
+                icone: category != null
+                    ? Icon(category.icon)
+                    : const Icon(Icons.category_outlined),
+
                 type: transaction.type,
               ),
             );

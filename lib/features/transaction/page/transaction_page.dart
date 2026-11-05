@@ -2,23 +2,23 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:sem_sufoco/core/model/category.dart';
 import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
+import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
 import 'package:sem_sufoco/features/home/widgets/app_line.dart';
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
 import 'package:sem_sufoco/features/transaction/widget/app_transaction_payment_section.dart';
 import 'package:sem_sufoco/features/transaction/widget/category_selector.dart';
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
 import 'package:sem_sufoco/shared/app_button.dart';
-import 'package:sem_sufoco/shared/mocks/category_mock.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({
     super.key,
     required this.pageController,
     required this.controller,
+    required Transaction transaction,
   });
 
   final PageController pageController;
@@ -30,7 +30,7 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage> {
   // =========================
-  // Controllers
+  // Controllers de Texto
   // =========================
 
   final establishmentController = TextEditingController();
@@ -38,73 +38,78 @@ class _TransactionPageState extends State<TransactionPage> {
   final descriptionController = TextEditingController();
 
   // =========================
-  // Seleções
-  // =========================
-
-  Category? selectedCategory;
-  PaymentMethod? selectedPaymentMethod;
-  TransactionType selectedTransactionType = TransactionType.expense;
-  DateTime? selectedDate;
-  TimeOfDay? selectedTime;
-
-  // =========================
   // Selecionar Data
   // =========================
 
   Future<void> _selectDate() async {
+    final transactionController = context.read<TransactionController>();
+
     final date = await showDatePicker(
       context: context,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: transactionController.selectedDate ?? DateTime.now(),
     );
 
     if (date != null) {
-      setState(() => selectedDate = date);
+      transactionController.setDate(date);
     }
   }
 
   // =========================
-  // Selecionar Hora
+  // Selecionar Horário
   // =========================
 
   Future<void> _selectTime() async {
+    final transactionController = context.read<TransactionController>();
+
     final time = await showTimePicker(
       context: context,
-      initialTime: selectedTime ?? TimeOfDay.now(),
+      initialTime: transactionController.selectedTime ?? TimeOfDay.now(),
     );
 
     if (time != null) {
-      setState(() => selectedTime = time);
+      transactionController.setTime(time);
     }
   }
 
   // =========================
-  // Salvar
+  // Salvar Transação
   // =========================
 
-  void _saveTransaction() {
-    final controller = context.read<TransactionController>();
+  Future<void> _saveTransaction() async {
+    final transactionController = context.read<TransactionController>();
 
-    final error = controller.saveTransaction(
+    final error = await transactionController.saveTransaction(
       establishment: establishmentController.text,
       amount: amountController.text,
       description: descriptionController.text,
-      categoryId: selectedCategory?.id ?? '',
-      date: selectedDate,
-      time: selectedTime,
-      paymentMethod: selectedPaymentMethod,
-      type: selectedTransactionType,
     );
 
+    if (!mounted) return;
+
     if (error != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: Colors.redAccent),
+      );
+
       return;
     }
 
-    _clearForm();
+    // =========================
+    // Limpar Formulário
+    // =========================
+
+    _clearTextFields();
+    transactionController.clearForm();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Transação salva com sucesso!')),
+    );
+
+    // =========================
+    // Navegar Para Transações
+    // =========================
 
     if (widget.pageController.hasClients) {
       widget.pageController.jumpToPage(1);
@@ -114,21 +119,13 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   // =========================
-  // Limpar Formulário
+  // Limpar Campos de Texto
   // =========================
 
-  void _clearForm() {
+  void _clearTextFields() {
     establishmentController.clear();
     amountController.clear();
     descriptionController.clear();
-
-    setState(() {
-      selectedCategory = null;
-      selectedPaymentMethod = null;
-      selectedTransactionType = TransactionType.expense;
-      selectedDate = null;
-      selectedTime = null;
-    });
   }
 
   // =========================
@@ -140,6 +137,7 @@ class _TransactionPageState extends State<TransactionPage> {
     establishmentController.dispose();
     amountController.dispose();
     descriptionController.dispose();
+
     super.dispose();
   }
 
@@ -149,6 +147,9 @@ class _TransactionPageState extends State<TransactionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final categoryController = context.watch<CategoryController>();
+    final transactionController = context.watch<TransactionController>();
+
     return Scaffold(
       backgroundColor: AppColors.backGround,
 
@@ -216,12 +217,9 @@ class _TransactionPageState extends State<TransactionPage> {
                         label: 'Entrada',
                         icon: Icons.arrow_downward,
                         type: TransactionType.income,
-                        selectedType: selectedTransactionType,
-                        onSelected: (type) {
-                          setState(() {
-                            selectedTransactionType = type;
-                          });
-                        },
+                        selectedType:
+                            transactionController.selectedTransactionType,
+                        onSelected: transactionController.setTransactionType,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -230,12 +228,9 @@ class _TransactionPageState extends State<TransactionPage> {
                         label: 'Saída',
                         icon: Icons.arrow_upward,
                         type: TransactionType.expense,
-                        selectedType: selectedTransactionType,
-                        onSelected: (type) {
-                          setState(() {
-                            selectedTransactionType = type;
-                          });
-                        },
+                        selectedType:
+                            transactionController.selectedTransactionType,
+                        onSelected: transactionController.setTransactionType,
                       ),
                     ),
                   ],
@@ -244,17 +239,17 @@ class _TransactionPageState extends State<TransactionPage> {
                 const SizedBox(height: 24),
 
                 // =========================
-                // Data e Hora
+                // Data e Horário
                 // =========================
                 Row(
                   children: [
                     Expanded(
                       child: TransactionInfoField(
-                        labelTitle: selectedDate == null
+                        labelTitle: transactionController.selectedDate == null
                             ? 'Data'
-                            : '${selectedDate!.day.toString().padLeft(2, '0')}/'
-                                  '${selectedDate!.month.toString().padLeft(2, '0')}/'
-                                  '${selectedDate!.year}',
+                            : '${transactionController.selectedDate!.day.toString().padLeft(2, '0')}/'
+                                  '${transactionController.selectedDate!.month.toString().padLeft(2, '0')}/'
+                                  '${transactionController.selectedDate!.year}',
                         icon: Icons.calendar_today_outlined,
                         readOnly: true,
                         onTap: _selectDate,
@@ -263,9 +258,11 @@ class _TransactionPageState extends State<TransactionPage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: TransactionInfoField(
-                        labelTitle: selectedTime == null
+                        labelTitle: transactionController.selectedTime == null
                             ? 'Horário'
-                            : selectedTime!.format(context),
+                            : transactionController.selectedTime!.format(
+                                context,
+                              ),
                         icon: Icons.access_time,
                         readOnly: true,
                         onTap: _selectTime,
@@ -333,14 +330,18 @@ class _TransactionPageState extends State<TransactionPage> {
                 // =========================
                 // Categoria
                 // =========================
-                CategorySelector(
-                  categories: mockCategories,
-                  onSelected: (category) {
-                    setState(() {
-                      selectedCategory = category;
-                    });
-                  },
-                ),
+                if (categoryController.isLoading)
+                  const Center(child: CircularProgressIndicator())
+                else if (categoryController.errorMessage != null)
+                  Text(
+                    categoryController.errorMessage!,
+                    style: const TextStyle(color: Colors.redAccent),
+                  )
+                else
+                  CategorySelector(
+                    categories: categoryController.categories,
+                    onSelected: transactionController.setCategory,
+                  ),
 
                 const SizedBox(height: 10),
 
@@ -359,12 +360,9 @@ class _TransactionPageState extends State<TransactionPage> {
                 const SizedBox(height: 10),
 
                 AppTransactionPaymentSection(
-                  selectedPaymentMethod: selectedPaymentMethod,
-                  onSelected: (paymentMethod) {
-                    setState(() {
-                      selectedPaymentMethod = paymentMethod;
-                    });
-                  },
+                  selectedPaymentMethod:
+                      transactionController.selectedPaymentMethod,
+                  onSelected: transactionController.setPaymentMethod,
                 ),
 
                 const SizedBox(height: 16),
@@ -372,7 +370,17 @@ class _TransactionPageState extends State<TransactionPage> {
                 // =========================
                 // Salvar
                 // =========================
-                AppButton(label: 'Salvar', onPressed: _saveTransaction),
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: transactionController.isSaving
+                        ? 'Salvando...'
+                        : 'Salvar',
+                    onPressed: transactionController.isSaving
+                        ? null
+                        : _saveTransaction,
+                  ),
+                ),
               ],
             ),
           ),

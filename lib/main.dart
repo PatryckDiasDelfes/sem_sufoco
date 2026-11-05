@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sem_sufoco/core/service/secure_auth_storage.dart';
+import 'package:sem_sufoco/features/release_details/controller/release_details_controller.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:sem_sufoco/core/service/secure_auth_storage.dart';
 import 'package:sem_sufoco/core/routes/app_router.dart';
 import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
@@ -42,7 +43,9 @@ Future<void> main() async {
         // =========================
         // Transações
         // =========================
-        ChangeNotifierProvider(create: (_) => TransactionController()),
+        ChangeNotifierProvider(
+          create: (_) => TransactionController()..loadTransactions(),
+        ),
 
         // =========================
         // Categorias
@@ -64,6 +67,8 @@ Future<void> main() async {
             return graphicController;
           },
         ),
+
+        ChangeNotifierProvider(create: (_) => ReleaseDetailsController()),
       ],
       child: const MainApp(),
     ),

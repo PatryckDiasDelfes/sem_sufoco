@@ -14,6 +14,7 @@ import 'package:sem_sufoco/features/settings/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sem_sufoco/features/register/controller/register_controller.dart';
 import 'package:sem_sufoco/features/register/page/register_page.dart';
+import 'package:sem_sufoco/features/transaction/page/transaction_page.dart';
 import 'package:sem_sufoco/shared/splash/page/splash_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -116,6 +117,34 @@ final GoRouter appRouter = GoRouter(
       path: '/extract',
       builder: (context, state) {
         return const ExtractPage();
+      },
+    ),
+
+    // =========================
+    // Editar Lançamento
+    // =========================
+    GoRoute(
+      path: '/EditTransactionPage',
+      builder: (context, state) {
+        final transaction = state.extra;
+
+        if (transaction is! Transaction) {
+          return const Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                'Transação não encontrada.',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+
+        return TransactionPage(
+          pageController: PageController(),
+          controller: NotchBottomBarController(),
+          transaction: transaction,
+        );
       },
     ),
   ],

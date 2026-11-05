@@ -1,22 +1,163 @@
 import 'package:flutter/material.dart';
 
+import 'package:sem_sufoco/core/model/category.dart';
 import 'package:sem_sufoco/core/model/transaction.dart';
-import 'package:sem_sufoco/shared/mocks/transaction_mock.dart';
+import 'package:sem_sufoco/features/transaction/service/transaction_service.dart';
 
 class TransactionController extends ChangeNotifier {
+  // =========================
+  // Serviço
+  // =========================
+
+  final TransactionService _service = TransactionService();
+
   // =========================
   // Transações
   // =========================
 
-  final List<Transaction> _transactions = [...mockTransactions];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get transactions => List.unmodifiable(_transactions);
 
+  bool _isLoading = false;
+  bool _isSaving = false;
+  String? _errorMessage;
+
+  bool get isLoading => _isLoading;
+  bool get isSaving => _isSaving;
+  String? get errorMessage => _errorMessage;
+
   // =========================
-  // Adicionar
+  // Estado do Formulário
   // =========================
 
-  String? addTransaction({
+  Category? _selectedCategory;
+  PaymentMethod? _selectedPaymentMethod;
+  TransactionType _selectedTransactionType = TransactionType.expense;
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
+  Category? get selectedCategory => _selectedCategory;
+
+  PaymentMethod? get selectedPaymentMethod => _selectedPaymentMethod;
+
+  TransactionType get selectedTransactionType => _selectedTransactionType;
+
+  DateTime? get selectedDate => _selectedDate;
+
+  TimeOfDay? get selectedTime => _selectedTime;
+
+  // =========================
+  // Carregar Transações
+  // =========================
+
+  Future<void> loadTransactions() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final transactions = await _service.getTransactions();
+
+      _transactions
+        ..clear()
+        ..addAll(transactions);
+    } catch (error) {
+      _errorMessage = 'Não foi possível carregar as transações.';
+      debugPrint('Erro ao carregar transações: $error');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // =========================
+  // Preparar Edição
+  // =========================
+
+  void setTransactionForEditing({
+    required Transaction transaction,
+    required Category category,
+  }) {
+    _selectedCategory = category;
+    _selectedPaymentMethod = transaction.paymentMethod;
+    _selectedTransactionType = transaction.type;
+    _selectedDate = transaction.purchasedAt;
+
+    _selectedTime = TimeOfDay(
+      hour: transaction.purchasedAt.hour,
+      minute: transaction.purchasedAt.minute,
+    );
+
+    notifyListeners();
+  }
+
+  // =========================
+  // Atualizar Categoria
+  // =========================
+
+  void setCategory(Category? category) {
+    _selectedCategory = category;
+    notifyListeners();
+  }
+
+  // =========================
+  // Atualizar Pagamento
+  // =========================
+
+  void setPaymentMethod(PaymentMethod? paymentMethod) {
+    _selectedPaymentMethod = paymentMethod;
+    notifyListeners();
+  }
+
+  // =========================
+  // Atualizar Tipo
+  // =========================
+
+  void setTransactionType(TransactionType type) {
+    _selectedTransactionType = type;
+    notifyListeners();
+  }
+
+  // =========================
+  // Atualizar Data
+  // =========================
+
+  void setDate(DateTime? date) {
+    _selectedDate = date;
+    notifyListeners();
+  }
+
+  // =========================
+  // Atualizar Horário
+  // =========================
+
+  void setTime(TimeOfDay? time) {
+    _selectedTime = time;
+    notifyListeners();
+  }
+
+  // =========================
+  // Limpar Formulário
+  // =========================
+
+  void clearForm() {
+    _selectedCategory = null;
+    _selectedPaymentMethod = null;
+    _selectedTransactionType = TransactionType.expense;
+    _selectedDate = null;
+    _selectedTime = null;
+
+    notifyListeners();
+  }
+
+  // =========================
+  // Adicionar Transação
+  // =========================
+
+  Future<String?> addTransaction({
     required String establishment,
     required double amount,
     required String description,
@@ -24,7 +165,7 @@ class TransactionController extends ChangeNotifier {
     required DateTime purchasedAt,
     required PaymentMethod paymentMethod,
     required TransactionType type,
-  }) {
+  }) async {
     final validationError = _validateTransaction(
       establishment: establishment,
       amount: amount,
@@ -36,47 +177,56 @@ class TransactionController extends ChangeNotifier {
       return validationError;
     }
 
-    final transaction = Transaction(
-      id: 'transaction_${DateTime.now().millisecondsSinceEpoch}',
-      purchasedAt: purchasedAt,
-      establishment: establishment.trim(),
-      amount: amount,
-      description: description.trim(),
-      categoryId: categoryId,
-      paymentMethod: paymentMethod,
-      type: type,
-    );
+    if (_isSaving) {
+      return 'Aguarde o salvamento da transação.';
+    }
 
-    _transactions.insert(0, transaction);
-
+    _isSaving = true;
     notifyListeners();
 
-    return null;
+    try {
+      final transaction = await _service.addTransaction(
+        establishment: establishment,
+        amount: amount,
+        description: description,
+        categoryId: categoryId,
+        purchasedAt: purchasedAt,
+        paymentMethod: paymentMethod,
+        type: type,
+      );
+
+      _transactions.insert(0, transaction);
+
+      return null;
+    } catch (error, stackTrace) {
+      debugPrint('Erro ao adicionar transação: $error');
+      debugPrint('StackTrace: $stackTrace');
+
+      return 'Erro ao salvar: $error';
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
   }
 
   // =========================
   // Salvar Transação
   // =========================
 
-  String? saveTransaction({
+  Future<String?> saveTransaction({
     required String establishment,
     required String amount,
     required String description,
-    required String categoryId,
-    required DateTime? date,
-    required TimeOfDay? time,
-    required PaymentMethod? paymentMethod,
-    required TransactionType type,
-  }) {
-    if (date == null || time == null) {
+  }) async {
+    if (_selectedDate == null || _selectedTime == null) {
       return 'Selecione a data e o horário.';
     }
 
-    if (categoryId.trim().isEmpty) {
+    if (_selectedCategory == null) {
       return 'Selecione uma categoria.';
     }
 
-    if (paymentMethod == null) {
+    if (_selectedPaymentMethod == null) {
       return 'Selecione uma forma de pagamento.';
     }
 
@@ -87,29 +237,29 @@ class TransactionController extends ChangeNotifier {
     }
 
     final purchasedAt = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
     );
 
-    return addTransaction(
+    return await addTransaction(
       establishment: establishment,
       amount: parsedAmount,
       description: description,
-      categoryId: categoryId,
+      categoryId: _selectedCategory!.id,
       purchasedAt: purchasedAt,
-      paymentMethod: paymentMethod,
-      type: type,
+      paymentMethod: _selectedPaymentMethod!,
+      type: _selectedTransactionType,
     );
   }
 
   // =========================
-  // Editar
+  // Editar Transação
   // =========================
 
-  String? updateTransaction({
+  Future<String?> updateTransaction({
     required String id,
     required String establishment,
     required double amount,
@@ -118,7 +268,7 @@ class TransactionController extends ChangeNotifier {
     required DateTime purchasedAt,
     required PaymentMethod paymentMethod,
     required TransactionType type,
-  }) {
+  }) async {
     final validationError = _validateTransaction(
       establishment: establishment,
       amount: amount,
@@ -130,6 +280,10 @@ class TransactionController extends ChangeNotifier {
       return validationError;
     }
 
+    if (_isSaving) {
+      return 'Aguarde a operação em andamento.';
+    }
+
     final index = _transactions.indexWhere(
       (transaction) => transaction.id == id,
     );
@@ -138,31 +292,48 @@ class TransactionController extends ChangeNotifier {
       return 'Lançamento não encontrado.';
     }
 
-    _transactions[index] = Transaction(
-      id: id,
-      purchasedAt: purchasedAt,
-      establishment: establishment.trim(),
-      amount: amount,
-      description: description.trim(),
-      categoryId: categoryId,
-      paymentMethod: paymentMethod,
-      type: type,
-    );
-
+    _isSaving = true;
     notifyListeners();
 
-    return null;
+    try {
+      final updatedTransaction = await _service.updateTransaction(
+        id: id,
+        establishment: establishment,
+        amount: amount,
+        description: description,
+        categoryId: categoryId,
+        purchasedAt: purchasedAt,
+        paymentMethod: paymentMethod,
+        type: type,
+      );
+
+      _transactions[index] = updatedTransaction;
+
+      return null;
+    } catch (error, stackTrace) {
+      debugPrint('Erro ao atualizar transação: $error');
+      debugPrint('StackTrace: $stackTrace');
+
+      return 'Não foi possível atualizar a transação.';
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
   }
 
   // =========================
-  // Excluir
+  // Excluir Transação
   // =========================
 
-  String? removeTransaction(String id) {
+  Future<String?> removeTransaction(String id) async {
     if (id.trim().isEmpty) {
       return 'Lançamento inválido.';
     }
 
+    if (_isSaving) {
+      return 'Aguarde a operação em andamento.';
+    }
+
     final index = _transactions.indexWhere(
       (transaction) => transaction.id == id,
     );
@@ -171,11 +342,24 @@ class TransactionController extends ChangeNotifier {
       return 'Lançamento não encontrado.';
     }
 
-    _transactions.removeAt(index);
-
+    _isSaving = true;
     notifyListeners();
 
-    return null;
+    try {
+      await _service.removeTransaction(id);
+
+      _transactions.removeAt(index);
+
+      return null;
+    } catch (error, stackTrace) {
+      debugPrint('Erro ao excluir transação: $error');
+      debugPrint('StackTrace: $stackTrace');
+
+      return 'Não foi possível excluir a transação.';
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
   }
 
   // =========================
@@ -183,11 +367,13 @@ class TransactionController extends ChangeNotifier {
   // =========================
 
   Transaction? getById(String id) {
-    try {
-      return transactions.firstWhere((transaction) => transaction.id == id);
-    } catch (e) {
-      return null;
+    for (final transaction in _transactions) {
+      if (transaction.id == id) {
+        return transaction;
+      }
     }
+
+    return null;
   }
 
   // =========================

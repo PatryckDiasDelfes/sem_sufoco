@@ -35,5 +35,5 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(20, 60);
+  Size get preferredSize => const Size(20, 60);
 }

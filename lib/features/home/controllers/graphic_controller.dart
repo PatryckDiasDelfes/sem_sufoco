@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_initializing_formals
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';

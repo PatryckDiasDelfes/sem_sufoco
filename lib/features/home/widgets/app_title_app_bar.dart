@@ -13,10 +13,10 @@ class AppTitleAppBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Olá $userName 🖐️ ', style: AppTextStyle.AppBartitle),
+          Text('Olá $userName 🖐️ ', style: AppTextStyle.appBarTitle),
           const Text(
             'Vamos conquistar seus objetivos',
-            style: AppTextStyle.AppBarsubTitle,
+            style: AppTextStyle.appBarTitle,
           ),
         ],
       ),

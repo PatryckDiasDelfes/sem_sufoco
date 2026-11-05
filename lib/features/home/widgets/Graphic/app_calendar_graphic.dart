@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
-import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
+import 'package:sem_sufoco/features/home/controllers/graphic_controller.dart';
 
 class AppCalendarGraphic extends StatelessWidget {
   const AppCalendarGraphic({super.key});
@@ -91,3 +91,4 @@ class AppCalendarGraphic extends StatelessWidget {
     );
   }
 }
+

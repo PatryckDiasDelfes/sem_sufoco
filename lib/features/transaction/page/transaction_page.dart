@@ -2,7 +2,6 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
@@ -10,15 +9,21 @@ import 'package:sem_sufoco/features/home/widgets/app_line.dart';
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
 import 'package:sem_sufoco/features/transaction/widget/app_transaction_payment_section.dart';
 import 'package:sem_sufoco/features/transaction/widget/category_selector.dart';
+import 'package:sem_sufoco/features/transaction/widget/transaction_type_selector.dart';
+import 'package:sem_sufoco/features/transaction/widget/transaction_date_section.dart';
+import 'package:sem_sufoco/features/transaction/widget/transaction_description_field.dart';
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
 import 'package:sem_sufoco/shared/app_button.dart';
+
+// =========================
+// Transaction Page
+// =========================
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({
     super.key,
     required this.pageController,
     required this.controller,
-    required Transaction transaction,
   });
 
   final PageController pageController;
@@ -92,13 +97,8 @@ class _TransactionPageState extends State<TransactionPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error), backgroundColor: Colors.redAccent),
       );
-
       return;
     }
-
-    // =========================
-    // Limpar Formulário
-    // =========================
 
     _clearTextFields();
     transactionController.clearForm();
@@ -108,7 +108,7 @@ class _TransactionPageState extends State<TransactionPage> {
     );
 
     // =========================
-    // Navegar Para Transações
+    // Navegação
     // =========================
 
     if (widget.pageController.hasClients) {
@@ -119,7 +119,7 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   // =========================
-  // Limpar Campos de Texto
+  // Limpar Campos
   // =========================
 
   void _clearTextFields() {
@@ -137,12 +137,11 @@ class _TransactionPageState extends State<TransactionPage> {
     establishmentController.dispose();
     amountController.dispose();
     descriptionController.dispose();
-
     super.dispose();
   }
 
   // =========================
-  // Build
+  // Interface
   // =========================
 
   @override
@@ -152,10 +151,6 @@ class _TransactionPageState extends State<TransactionPage> {
 
     return Scaffold(
       backgroundColor: AppColors.backGround,
-
-      // =========================
-      // AppBar
-      // =========================
       appBar: AppBar(
         backgroundColor: AppColors.backGround,
         automaticallyImplyLeading: false,
@@ -174,10 +169,6 @@ class _TransactionPageState extends State<TransactionPage> {
           SizedBox(width: 16),
         ],
       ),
-
-      // =========================
-      // Conteúdo
-      // =========================
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -195,87 +186,30 @@ class _TransactionPageState extends State<TransactionPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // =========================
-                // Título
-                // =========================
                 Text(
                   'Sobre a transação',
                   style: AppTextStyle.bodySmall.copyWith(
                     color: AppColors.white,
                   ),
                 ),
-
                 const SizedBox(height: 16),
 
-                // =========================
-                // Tipo da Transação
-                // =========================
-                Row(
-                  children: [
-                    Expanded(
-                      child: _TransactionTypeButton(
-                        label: 'Entrada',
-                        icon: Icons.arrow_downward,
-                        type: TransactionType.income,
-                        selectedType:
-                            transactionController.selectedTransactionType,
-                        onSelected: transactionController.setTransactionType,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _TransactionTypeButton(
-                        label: 'Saída',
-                        icon: Icons.arrow_upward,
-                        type: TransactionType.expense,
-                        selectedType:
-                            transactionController.selectedTransactionType,
-                        onSelected: transactionController.setTransactionType,
-                      ),
-                    ),
-                  ],
+                TransactionTypeSelector(
+                  selectedType: transactionController.selectedTransactionType,
+                  onSelected: transactionController.setTransactionType,
                 ),
 
                 const SizedBox(height: 24),
 
-                // =========================
-                // Data e Horário
-                // =========================
-                Row(
-                  children: [
-                    Expanded(
-                      child: TransactionInfoField(
-                        labelTitle: transactionController.selectedDate == null
-                            ? 'Data'
-                            : '${transactionController.selectedDate!.day.toString().padLeft(2, '0')}/'
-                                  '${transactionController.selectedDate!.month.toString().padLeft(2, '0')}/'
-                                  '${transactionController.selectedDate!.year}',
-                        icon: Icons.calendar_today_outlined,
-                        readOnly: true,
-                        onTap: _selectDate,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TransactionInfoField(
-                        labelTitle: transactionController.selectedTime == null
-                            ? 'Horário'
-                            : transactionController.selectedTime!.format(
-                                context,
-                              ),
-                        icon: Icons.access_time,
-                        readOnly: true,
-                        onTap: _selectTime,
-                      ),
-                    ),
-                  ],
+                TransactionDateSection(
+                  selectedDate: transactionController.selectedDate,
+                  selectedTime: transactionController.selectedTime,
+                  onSelectDate: _selectDate,
+                  onSelectTime: _selectTime,
                 ),
 
                 const SizedBox(height: 16),
 
-                // =========================
-                // Estabelecimento
-                // =========================
                 TransactionInfoField(
                   labelTitle: 'Estabelecimento',
                   icon: Icons.storefront_outlined,
@@ -285,9 +219,6 @@ class _TransactionPageState extends State<TransactionPage> {
 
                 const SizedBox(height: 24),
 
-                // =========================
-                // Valor
-                // =========================
                 TransactionInfoField(
                   labelTitle: '0,00',
                   icon: Icons.attach_money,
@@ -300,39 +231,17 @@ class _TransactionPageState extends State<TransactionPage> {
                 const SizedBox(height: 24),
 
                 const AppLine(size: 1),
+                const SizedBox(height: 16),
+
+                TransactionDescriptionField(controller: descriptionController),
 
                 const SizedBox(height: 16),
 
-                // =========================
-                // Descrição
-                // =========================
-                TextFormField(
-                  controller: descriptionController,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                  cursorColor: AppColors.colorsTheme,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(bottom: 40),
-                      child: Icon(
-                        Icons.receipt_long_outlined,
-                        color: AppColors.accent,
-                      ),
-                    ),
-                    hintText: 'Adicionar descrição',
-                    hintStyle: TextStyle(color: AppColors.white, fontSize: 14),
-                    border: InputBorder.none,
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // =========================
-                // Categoria
-                // =========================
-                if (categoryController.isLoading)
+                if (categoryController.isLoading &&
+                    categoryController.categories.isEmpty)
                   const Center(child: CircularProgressIndicator())
-                else if (categoryController.errorMessage != null)
+                else if (categoryController.errorMessage != null &&
+                    categoryController.categories.isEmpty)
                   Text(
                     categoryController.errorMessage!,
                     style: const TextStyle(color: Colors.redAccent),
@@ -340,14 +249,13 @@ class _TransactionPageState extends State<TransactionPage> {
                 else
                   CategorySelector(
                     categories: categoryController.categories,
+                    selectedCategoryId:
+                        transactionController.selectedCategory?.id,
                     onSelected: transactionController.setCategory,
                   ),
 
                 const SizedBox(height: 10),
 
-                // =========================
-                // Forma de Pagamento
-                // =========================
                 const Text(
                   'Forma de pagamento',
                   style: TextStyle(
@@ -367,9 +275,6 @@ class _TransactionPageState extends State<TransactionPage> {
 
                 const SizedBox(height: 16),
 
-                // =========================
-                // Salvar
-                // =========================
                 SizedBox(
                   width: double.infinity,
                   child: AppButton(
@@ -384,60 +289,6 @@ class _TransactionPageState extends State<TransactionPage> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// =========================
-// Botão de Tipo
-// =========================
-
-class _TransactionTypeButton extends StatelessWidget {
-  const _TransactionTypeButton({
-    required this.label,
-    required this.icon,
-    required this.type,
-    required this.selectedType,
-    required this.onSelected,
-  });
-
-  final String label;
-  final IconData icon;
-  final TransactionType type;
-  final TransactionType selectedType;
-  final ValueChanged<TransactionType> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = selectedType == type;
-
-    return GestureDetector(
-      onTap: () => onSelected(type),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.cardGreen : AppColors.bg,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? AppColors.accent : AppColors.cardGreen,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 18, color: AppColors.accent),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
         ),
       ),
     );

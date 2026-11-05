@@ -14,15 +14,7 @@ class ExtractPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TransactionController>(
       builder: (context, transactionController, child) {
-        // =========================
-        // Transações
-        // =========================
-
         final transactionsList = transactionController.transactions;
-
-        // =========================
-        // Receitas
-        // =========================
 
         final incomes =
             transactionsList
@@ -32,10 +24,6 @@ class ExtractPage extends StatelessWidget {
                 .toList()
               ..sort((a, b) => b.purchasedAt.compareTo(a.purchasedAt));
 
-        // =========================
-        // Despesas
-        // =========================
-
         final expenses =
             transactionsList
                 .where(
@@ -44,15 +32,7 @@ class ExtractPage extends StatelessWidget {
                 .toList()
               ..sort((a, b) => b.purchasedAt.compareTo(a.purchasedAt));
 
-        // =========================
-        // Lista de transações
-        // =========================
-
         final transactions = [...incomes, ...expenses];
-
-        // =========================
-        // Saldo
-        // =========================
 
         final balance = transactionsList.fold<double>(0, (total, transaction) {
           if (transaction.type == TransactionType.income) {
@@ -64,24 +44,13 @@ class ExtractPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.background,
-
-          // =========================
-          // AppBar
-          // =========================
           appBar: AppBar(
             backgroundColor: AppColors.background,
             foregroundColor: Colors.white,
-            title: Text('Extrato', style: AppTextStyle.title),
+            title: const Text('Extrato', style: AppTextStyle.title),
           ),
-
-          // =========================
-          // Conteúdo
-          // =========================
           body: Column(
             children: [
-              // =========================
-              // Saldo
-              // =========================
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -110,10 +79,6 @@ class ExtractPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // =========================
-              // Lista de transações
-              // =========================
               Expanded(
                 child: Consumer<CategoryController>(
                   builder: (context, categoryController, child) {
@@ -125,7 +90,6 @@ class ExtractPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final transaction = transactions[index];
 
-                        // Busca a categoria carregada pelo Supabase.
                         final matchingCategories = categories.where(
                           (category) => category.id == transaction.categoryId,
                         );
@@ -146,9 +110,6 @@ class ExtractPage extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              // =========================
-                              // Ícone
-                              // =========================
                               Container(
                                 width: 45,
                                 height: 45,
@@ -163,12 +124,7 @@ class ExtractPage extends StatelessWidget {
                                       : AppColors.tertiary,
                                 ),
                               ),
-
                               const SizedBox(width: 12),
-
-                              // =========================
-                              // Informações
-                              // =========================
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,10 +147,6 @@ class ExtractPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-
-                              // =========================
-                              // Valor
-                              // =========================
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [

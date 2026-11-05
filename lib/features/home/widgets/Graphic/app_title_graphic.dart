@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
-import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
+import 'package:sem_sufoco/features/home/controllers/graphic_controller.dart';
 
 class AppTitleGraphic extends StatelessWidget {
   const AppTitleGraphic({super.key});
@@ -58,7 +58,7 @@ class AppTitleGraphic extends StatelessWidget {
                   style: TextStyle(color: color, fontWeight: FontWeight.bold),
                 ),
                 const Text(
-                  'em relação ao mês anterior',
+                  'em relaÃ§Ã£o ao mÃªs anterior',
                   style: TextStyle(color: Colors.grey, fontSize: 10),
                 ),
               ],
@@ -69,3 +69,4 @@ class AppTitleGraphic extends StatelessWidget {
     );
   }
 }
+

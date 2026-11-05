@@ -60,6 +60,7 @@ class AppElevatedButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         );
+
       case ButtonType.outlined:
         return ElevatedButton.styleFrom(
           minimumSize: const Size(48, 48),
@@ -68,12 +69,12 @@ class AppElevatedButton extends StatelessWidget {
           disabledForegroundColor: AppColors.white,
           disabledBackgroundColor: backgroundColor,
           textStyle: AppTextStyle.buttonLabel,
-
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: AppColors.black),
+            side: const BorderSide(color: AppColors.black),
             borderRadius: BorderRadius.circular(12),
           ),
         );
+
       case ButtonType.addToCart:
         return ElevatedButton.styleFrom(
           minimumSize: const Size(48, 48),
@@ -86,6 +87,7 @@ class AppElevatedButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         );
+
       case ButtonType.smallButton:
         return ElevatedButton.styleFrom(
           minimumSize: const Size(20, 55),
@@ -98,6 +100,7 @@ class AppElevatedButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
         );
+
       case ButtonType.responsive:
         return ElevatedButton.styleFrom(
           foregroundColor: AppColors.black,

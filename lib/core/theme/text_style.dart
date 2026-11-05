@@ -21,6 +21,7 @@ class AppTextStyle {
     fontSize: 16,
     fontWeight: FontWeight.normal,
   );
+
   static const TextStyle inputLabel = TextStyle(
     color: AppColors.gray200,
     fontSize: 15,
@@ -47,32 +48,37 @@ class AppTextStyle {
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+
   static const TextStyle homeTextGren = TextStyle(
     color: AppColors.grenLive,
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+
   static const TextStyle extrectSub = TextStyle(
     color: AppColors.gray100,
     fontSize: 10,
   );
+
   static const TextStyle homePriceRed = TextStyle(
     color: AppColors.red,
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+
   static const TextStyle homePriceWhite = TextStyle(
     color: AppColors.white,
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
 
-  static const TextStyle AppBartitle = TextStyle(
+  static const TextStyle appBarTitle = TextStyle(
     color: AppColors.white,
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
-  static const TextStyle AppBarsubTitle = TextStyle(
+
+  static const TextStyle appBarSubTitle = TextStyle(
     color: AppColors.gray100,
     fontSize: 12,
     fontWeight: FontWeight.bold,

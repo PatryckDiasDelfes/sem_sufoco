@@ -1,16 +1,17 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sem_sufoco/features/home/controllers/graphic_controller.dart';
 import 'package:sem_sufoco/features/release_details/controller/release_details_controller.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:sem_sufoco/core/service/secure_auth_storage.dart';
 import 'package:sem_sufoco/core/routes/app_router.dart';
-import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
+
 import 'package:sem_sufoco/features/transaction/controller/transaction_controller.dart';
 import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
 
 // =========================
-// Inicialização
+// InicializaÃ§Ã£o
 // =========================
 
 Future<void> main() async {
@@ -20,28 +21,28 @@ Future<void> main() async {
     url: 'https://codkqbpcgpafyrjgkvjh.supabase.co',
     publishableKey: 'sb_publishable_JJYwmwGeT2ad6YMHEM-OPw__2riqxqQ',
 
-    // Armazenamento seguro da sessão.
+    // Armazenamento seguro da sessÃ£o.
     authOptions: FlutterAuthClientOptions(localStorage: SecureAuthStorage()),
   );
 
   // =========================
-  // Verificação da Sessão
+  // VerificaÃ§Ã£o da SessÃ£o
   // =========================
 
   final session = Supabase.instance.client.auth.currentSession;
 
-  debugPrint('Sessão encontrada: ${session != null}');
-  debugPrint('Usuário: ${session?.user.email}');
+  debugPrint('SessÃ£o encontrada: ${session != null}');
+  debugPrint('UsuÃ¡rio: ${session?.user.email}');
 
   // =========================
-  // Inicialização do Aplicativo
+  // InicializaÃ§Ã£o do Aplicativo
   // =========================
 
   runApp(
     MultiProvider(
       providers: [
         // =========================
-        // Transações
+        // TransaÃ§Ãµes
         // =========================
         ChangeNotifierProvider(
           create: (_) => TransactionController()..loadTransactions(),
@@ -55,7 +56,7 @@ Future<void> main() async {
         ),
 
         // =========================
-        // Gráficos
+        // GrÃ¡ficos
         // =========================
         ChangeNotifierProxyProvider<TransactionController, GraphicController>(
           create: (_) => GraphicController(transactions: []),
@@ -93,3 +94,4 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+

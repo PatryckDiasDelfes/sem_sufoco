@@ -2,135 +2,142 @@ import 'package:flutter/material.dart';
 
 import 'package:sem_sufoco/core/model/category.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
-import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/transaction/widget/all_categories_sheet.dart';
 
-class CategorySelector extends StatefulWidget {
+// =========================
+// Category Selector
+// =========================
+
+class CategorySelector extends StatelessWidget {
   const CategorySelector({
     super.key,
     required this.categories,
-    this.onSelected,
+    required this.selectedCategoryId,
+    required this.onSelected,
   });
 
   final List<Category> categories;
-  final ValueChanged<Category>? onSelected;
+  final String? selectedCategoryId;
+  final ValueChanged<Category> onSelected;
 
-  @override
-  State<CategorySelector> createState() => _CategorySelectorState();
-}
-
-class _CategorySelectorState extends State<CategorySelector> {
-  String? selectedCategoryId;
+  // =========================
+  // Selecionar Categoria
+  // =========================
 
   void _selectCategory(Category category) {
-    setState(() => selectedCategoryId = category.id);
-    widget.onSelected?.call(category);
+    onSelected(category);
   }
+
+  // =========================
+  // Abrir Todas as Categorias
+  // =========================
+
+  void _openAllCategories(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.bg,
+      isScrollControlled: true,
+      builder: (context) {
+        return AllCategoriesSheet(
+          categories: categories,
+          selectedCategoryId: selectedCategoryId,
+          onSelected: _selectCategory,
+        );
+      },
+    );
+  }
+
+  // =========================
+  // Interface
+  // =========================
 
   @override
   Widget build(BuildContext context) {
-    final visibleCategories = widget.categories.take(3).toList();
-
-    final selected = widget.categories
-        .where((category) => category.id == selectedCategoryId)
-        .firstOrNull;
+    final visibleCategories = categories.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            const Text('Categorias', style: AppTextStyle.subTitle),
-            const Spacer(),
-            IconButton(
-              onPressed: () => showModalBottomSheet(
-                context: context,
-                backgroundColor: AppColors.background,
-                isScrollControlled: true,
-                builder: (_) => AllCategoriesSheet(
-                  categories: widget.categories,
-                  selectedCategoryId: selectedCategoryId,
-                  onSelected: _selectCategory,
-                ),
-              ),
-              icon: const Icon(Icons.more_horiz, color: Colors.white),
-            ),
-          ],
+        const Text(
+          'Categoria',
+          style: TextStyle(
+            color: AppColors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        const SizedBox(height: 10),
-        Row(
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
           children: [
-            for (int index = 0; index < visibleCategories.length; index++) ...[
-              Expanded(
-                child: _card(
-                  visibleCategories[index],
-                  selected: visibleCategories[index].id == selectedCategoryId,
-                ),
-              ),
+            ...visibleCategories.map((category) {
+              final isSelected = category.id == selectedCategoryId;
 
-              if (index < visibleCategories.length - 1)
-                const SizedBox(width: 10),
-            ],
-          ],
-        ),
-        if (selected != null) ...[
-          Row(
-            children: [
-              Icon(Icons.check_circle, size: 18, color: AppColors.primary),
-              const SizedBox(width: 8),
-              Text(
-                'Categoria selecionada: ',
-                style: AppTextStyle.bodySmall.copyWith(color: Colors.grey),
-              ),
-              Expanded(
-                child: Text(
-                  selected.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.bodySmall.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+              return GestureDetector(
+                onTap: () => _selectCategory(category),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.cardGreen : AppColors.bg,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.accent
+                          : AppColors.cardGreen,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(category.icon, color: category.color, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        category.name,
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+              );
+            }),
+            GestureDetector(
+              onTap: () => _openAllCategories(context),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.cardGreen),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.grid_view_rounded,
+                      color: AppColors.accent,
+                      size: 18,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Ver todas',
+                      style: TextStyle(color: AppColors.white, fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ],
-    );
-  }
-
-  Widget _card(Category category, {bool selected = false}) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => _selectCategory(category),
-      child: Container(
-        height: 90,
-        decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.bg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardGreen),
-          boxShadow: const [
-            BoxShadow(color: AppColors.shodownBox, blurRadius: 4),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              category.icon,
-              size: 26,
-              color: selected ? Colors.white : AppColors.primary,
-            ),
-            const SizedBox(height: 7),
-            Text(
-              category.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

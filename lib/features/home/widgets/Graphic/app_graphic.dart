@@ -1,9 +1,9 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:sem_sufoco/core/theme/app_colors.dart';
-import 'package:sem_sufoco/features/home/controllers/GraphicController.dart';
+import 'package:sem_sufoco/features/home/controllers/graphic_controller.dart';
 import 'package:sem_sufoco/utils.dart';
 
 class AppGraphic extends StatelessWidget {
@@ -85,7 +85,12 @@ class AppGraphic extends StatelessWidget {
               ),
             ),
             barGroups: controller.groups
-                .map((g) => RodsGroup(g.values.map(Rods).toList(), g.x))
+                .map(
+                  (group) => _buildBarGroup(
+                    group.values.map(_buildBarRod).toList(),
+                    group.x,
+                  ),
+                )
                 .toList(),
           ),
         );
@@ -93,12 +98,20 @@ class AppGraphic extends StatelessWidget {
     );
   }
 
-  BarChartGroupData RodsGroup(List<BarChartRodData> barRods, num numMes) =>
-      BarChartGroupData(x: numMes.toInt(), barsSpace: 2, barRods: barRods);
+  BarChartGroupData _buildBarGroup(
+    List<BarChartRodData> barRods,
+    num monthNumber,
+  ) {
+    return BarChartGroupData(
+      x: monthNumber.toInt(),
+      barsSpace: 2,
+      barRods: barRods,
+    );
+  }
 
-  BarChartRodData Rods(double numMoney) {
+  BarChartRodData _buildBarRod(double money) {
     return BarChartRodData(
-      toY: numMoney,
+      toY: money,
       color: AppColors.accent,
       width: 10,
       borderRadius: const BorderRadius.only(
@@ -108,3 +121,4 @@ class AppGraphic extends StatelessWidget {
     );
   }
 }
+

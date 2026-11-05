@@ -58,10 +58,11 @@ class AppExtract extends StatelessWidget {
           // =========================
           // Cabeçalho
           // =========================
-          AppExtractHead(
-            controller: controller!,
-            pageController: pageController!,
-          ),
+          if (controller != null && pageController != null)
+            AppExtractHead(
+              controller: controller!,
+              pageController: pageController!,
+            ),
 
           const AppLine(size: 1.3),
 

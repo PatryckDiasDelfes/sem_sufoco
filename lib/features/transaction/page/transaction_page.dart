@@ -1,7 +1,9 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:sem_sufoco/core/model/transaction.dart';
 import 'package:sem_sufoco/core/theme/app_colors.dart';
 import 'package:sem_sufoco/core/theme/text_style.dart';
 import 'package:sem_sufoco/features/categorie/controller/category_controller.dart';
@@ -15,19 +17,19 @@ import 'package:sem_sufoco/features/transaction/widget/transaction_description_f
 import 'package:sem_sufoco/features/transaction/widget/transaction_info_field.dart';
 import 'package:sem_sufoco/shared/app_button.dart';
 
-// =========================
-// Transaction Page
-// =========================
-
 class TransactionPage extends StatefulWidget {
   const TransactionPage({
     super.key,
     required this.pageController,
     required this.controller,
+    this.transaction,
   });
 
   final PageController pageController;
   final NotchBottomBarController controller;
+  final Transaction? transaction;
+
+  bool get isEditing => transaction != null;
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -35,29 +37,42 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage> {
   // =========================
-  // Controllers de Texto
+  // Inicialização
   // =========================
 
-  final establishmentController = TextEditingController();
-  final amountController = TextEditingController();
-  final descriptionController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.transaction != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        context.read<TransactionController>().prepareForEditing(
+          widget.transaction!,
+        );
+      });
+    }
+  }
 
   // =========================
   // Selecionar Data
   // =========================
 
   Future<void> _selectDate() async {
-    final transactionController = context.read<TransactionController>();
+    final controller = context.read<TransactionController>();
 
     final date = await showDatePicker(
       context: context,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
-      initialDate: transactionController.selectedDate ?? DateTime.now(),
+      initialDate: controller.selectedDate ?? DateTime.now(),
     );
 
+    if (!mounted) return;
+
     if (date != null) {
-      transactionController.setDate(date);
+      controller.setDate(date);
     }
   }
 
@@ -66,15 +81,17 @@ class _TransactionPageState extends State<TransactionPage> {
   // =========================
 
   Future<void> _selectTime() async {
-    final transactionController = context.read<TransactionController>();
+    final controller = context.read<TransactionController>();
 
     final time = await showTimePicker(
       context: context,
-      initialTime: transactionController.selectedTime ?? TimeOfDay.now(),
+      initialTime: controller.selectedTime ?? TimeOfDay.now(),
     );
 
+    if (!mounted) return;
+
     if (time != null) {
-      transactionController.setTime(time);
+      controller.setTime(time);
     }
   }
 
@@ -83,12 +100,10 @@ class _TransactionPageState extends State<TransactionPage> {
   // =========================
 
   Future<void> _saveTransaction() async {
-    final transactionController = context.read<TransactionController>();
+    final controller = context.read<TransactionController>();
 
-    final error = await transactionController.saveTransaction(
-      establishment: establishmentController.text,
-      amount: amountController.text,
-      description: descriptionController.text,
+    final error = await controller.saveTransaction(
+      transactionId: widget.transaction?.id,
     );
 
     if (!mounted) return;
@@ -100,44 +115,26 @@ class _TransactionPageState extends State<TransactionPage> {
       return;
     }
 
-    _clearTextFields();
-    transactionController.clearForm();
+    controller.clearForm();
+
+    if (widget.isEditing) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Transação atualizada com sucesso!')),
+      );
+
+      context.pop();
+      return;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Transação salva com sucesso!')),
     );
-
-    // =========================
-    // Navegação
-    // =========================
 
     if (widget.pageController.hasClients) {
       widget.pageController.jumpToPage(1);
     }
 
     widget.controller.jumpTo(1);
-  }
-
-  // =========================
-  // Limpar Campos
-  // =========================
-
-  void _clearTextFields() {
-    establishmentController.clear();
-    amountController.clear();
-    descriptionController.clear();
-  }
-
-  // =========================
-  // Dispose
-  // =========================
-
-  @override
-  void dispose() {
-    establishmentController.dispose();
-    amountController.dispose();
-    descriptionController.dispose();
-    super.dispose();
   }
 
   // =========================
@@ -153,11 +150,11 @@ class _TransactionPageState extends State<TransactionPage> {
       backgroundColor: AppColors.backGround,
       appBar: AppBar(
         backgroundColor: AppColors.backGround,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.isEditing,
         elevation: 0,
-        title: const Text(
-          'Novo lançamento',
-          style: TextStyle(
+        title: Text(
+          widget.isEditing ? 'Editar lançamento' : 'Novo lançamento',
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: AppColors.white,
@@ -192,6 +189,7 @@ class _TransactionPageState extends State<TransactionPage> {
                     color: AppColors.white,
                   ),
                 ),
+
                 const SizedBox(height: 16),
 
                 TransactionTypeSelector(
@@ -213,7 +211,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 TransactionInfoField(
                   labelTitle: 'Estabelecimento',
                   icon: Icons.storefront_outlined,
-                  controller: establishmentController,
+                  controller: transactionController.establishmentController,
                   keyboardType: TextInputType.text,
                 ),
 
@@ -222,7 +220,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 TransactionInfoField(
                   labelTitle: '0,00',
                   icon: Icons.attach_money,
-                  controller: amountController,
+                  controller: transactionController.amountController,
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
@@ -231,9 +229,12 @@ class _TransactionPageState extends State<TransactionPage> {
                 const SizedBox(height: 24),
 
                 const AppLine(size: 1),
+
                 const SizedBox(height: 16),
 
-                TransactionDescriptionField(controller: descriptionController),
+                TransactionDescriptionField(
+                  controller: transactionController.descriptionController,
+                ),
 
                 const SizedBox(height: 16),
 
@@ -250,7 +251,7 @@ class _TransactionPageState extends State<TransactionPage> {
                   CategorySelector(
                     categories: categoryController.categories,
                     selectedCategoryId:
-                        transactionController.selectedCategory?.id,
+                        transactionController.selectedCategoryId,
                     onSelected: transactionController.setCategory,
                   ),
 
@@ -280,6 +281,8 @@ class _TransactionPageState extends State<TransactionPage> {
                   child: AppButton(
                     label: transactionController.isSaving
                         ? 'Salvando...'
+                        : widget.isEditing
+                        ? 'Atualizar lançamento'
                         : 'Salvar',
                     onPressed: transactionController.isSaving
                         ? null

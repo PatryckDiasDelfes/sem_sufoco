@@ -13,6 +13,17 @@ class ReleaseDetailsController extends ChangeNotifier {
   bool get isDeleting => _isDeleting;
 
   // =========================
+  // Buscar Transação Atualizada
+  // =========================
+
+  Transaction getCurrentTransaction({
+    required Transaction transaction,
+    required TransactionController transactionController,
+  }) {
+    return transactionController.getById(transaction.id) ?? transaction;
+  }
+
+  // =========================
   // Excluir Lançamento
   // =========================
 
@@ -28,11 +39,7 @@ class ReleaseDetailsController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final error = await transactionController.removeTransaction(
-        transaction.id,
-      );
-
-      return error;
+      return await transactionController.removeTransaction(transaction.id);
     } finally {
       _isDeleting = false;
       notifyListeners();

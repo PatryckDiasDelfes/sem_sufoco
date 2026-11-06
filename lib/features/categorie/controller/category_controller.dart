@@ -66,6 +66,20 @@ class CategoryController extends ChangeNotifier {
   }
 
   // =========================
+  // Buscar Categoria Por ID
+  // =========================
+
+  Category? getById(String id) {
+    for (final category in categories) {
+      if (category.id == id) {
+        return category;
+      }
+    }
+
+    return null;
+  }
+
+  // =========================
   // Converter Ícones
   // =========================
 

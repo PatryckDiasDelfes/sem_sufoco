@@ -12,6 +12,16 @@ class TransactionController extends ChangeNotifier {
   final TransactionService _service = TransactionService();
 
   // =========================
+  // Controllers do Formulário
+  // =========================
+
+  final TextEditingController establishmentController = TextEditingController();
+
+  final TextEditingController amountController = TextEditingController();
+
+  final TextEditingController descriptionController = TextEditingController();
+
+  // =========================
   // Transações
   // =========================
 
@@ -32,12 +42,18 @@ class TransactionController extends ChangeNotifier {
   // =========================
 
   Category? _selectedCategory;
+  String? _selectedCategoryId;
+
   PaymentMethod? _selectedPaymentMethod;
+
   TransactionType _selectedTransactionType = TransactionType.expense;
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
   Category? get selectedCategory => _selectedCategory;
+
+  String? get selectedCategoryId => _selectedCategoryId;
 
   PaymentMethod? get selectedPaymentMethod => _selectedPaymentMethod;
 
@@ -64,9 +80,11 @@ class TransactionController extends ChangeNotifier {
       _transactions
         ..clear()
         ..addAll(transactions);
-    } catch (error) {
+    } catch (error, stackTrace) {
       _errorMessage = 'Não foi possível carregar as transações.';
+
       debugPrint('Erro ao carregar transações: $error');
+      debugPrintStack(stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -77,13 +95,17 @@ class TransactionController extends ChangeNotifier {
   // Preparar Edição
   // =========================
 
-  void setTransactionForEditing({
-    required Transaction transaction,
-    required Category category,
-  }) {
-    _selectedCategory = category;
+  void prepareForEditing(Transaction transaction) {
+    establishmentController.text = transaction.establishment;
+    amountController.text = transaction.amount.toStringAsFixed(2);
+    descriptionController.text = transaction.description;
+
+    _selectedCategory = null;
+    _selectedCategoryId = transaction.categoryId;
+
     _selectedPaymentMethod = transaction.paymentMethod;
     _selectedTransactionType = transaction.type;
+
     _selectedDate = transaction.purchasedAt;
 
     _selectedTime = TimeOfDay(
@@ -100,6 +122,8 @@ class TransactionController extends ChangeNotifier {
 
   void setCategory(Category? category) {
     _selectedCategory = category;
+    _selectedCategoryId = category?.id;
+
     notifyListeners();
   }
 
@@ -144,13 +168,95 @@ class TransactionController extends ChangeNotifier {
   // =========================
 
   void clearForm() {
+    establishmentController.clear();
+    amountController.clear();
+    descriptionController.clear();
+
     _selectedCategory = null;
+    _selectedCategoryId = null;
+
     _selectedPaymentMethod = null;
     _selectedTransactionType = TransactionType.expense;
+
     _selectedDate = null;
     _selectedTime = null;
 
     notifyListeners();
+  }
+
+  // =========================
+  // Salvar Transação
+  // =========================
+
+  Future<String?> saveTransaction({String? transactionId}) async {
+    if (_isSaving) {
+      return 'Aguarde a operação em andamento.';
+    }
+
+    final establishment = establishmentController.text.trim();
+    final amountText = amountController.text.trim();
+    final description = descriptionController.text.trim();
+
+    if (establishment.isEmpty) {
+      return 'Informe o estabelecimento.';
+    }
+
+    if (_selectedDate == null || _selectedTime == null) {
+      return 'Selecione a data e o horário.';
+    }
+
+    if (_selectedCategoryId == null || _selectedCategoryId!.trim().isEmpty) {
+      return 'Selecione uma categoria.';
+    }
+
+    if (_selectedPaymentMethod == null) {
+      return 'Selecione uma forma de pagamento.';
+    }
+
+    final normalizedAmount = amountText.contains(',')
+        ? amountText.replaceAll('.', '').replaceAll(',', '.')
+        : amountText;
+
+    final parsedAmount = double.tryParse(normalizedAmount);
+
+    if (parsedAmount == null || parsedAmount <= 0) {
+      return 'Informe um valor válido.';
+    }
+
+    final purchasedAt = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
+
+    if (purchasedAt.isAfter(DateTime.now())) {
+      return 'A data do lançamento não pode ser futura.';
+    }
+
+    if (transactionId != null) {
+      return updateTransaction(
+        id: transactionId,
+        establishment: establishment,
+        amount: parsedAmount,
+        description: description,
+        categoryId: _selectedCategoryId!,
+        purchasedAt: purchasedAt,
+        paymentMethod: _selectedPaymentMethod!,
+        type: _selectedTransactionType,
+      );
+    }
+
+    return addTransaction(
+      establishment: establishment,
+      amount: parsedAmount,
+      description: description,
+      categoryId: _selectedCategoryId!,
+      purchasedAt: purchasedAt,
+      paymentMethod: _selectedPaymentMethod!,
+      type: _selectedTransactionType,
+    );
   }
 
   // =========================
@@ -166,17 +272,6 @@ class TransactionController extends ChangeNotifier {
     required PaymentMethod paymentMethod,
     required TransactionType type,
   }) async {
-    final validationError = _validateTransaction(
-      establishment: establishment,
-      amount: amount,
-      categoryId: categoryId,
-      purchasedAt: purchasedAt,
-    );
-
-    if (validationError != null) {
-      return validationError;
-    }
-
     if (_isSaving) {
       return 'Aguarde o salvamento da transação.';
     }
@@ -200,59 +295,13 @@ class TransactionController extends ChangeNotifier {
       return null;
     } catch (error, stackTrace) {
       debugPrint('Erro ao adicionar transação: $error');
-      debugPrint('StackTrace: $stackTrace');
+      debugPrintStack(stackTrace: stackTrace);
 
-      return 'Erro ao salvar: $error';
+      return 'Não foi possível salvar a transação.';
     } finally {
       _isSaving = false;
       notifyListeners();
     }
-  }
-
-  // =========================
-  // Salvar Transação
-  // =========================
-
-  Future<String?> saveTransaction({
-    required String establishment,
-    required String amount,
-    required String description,
-  }) async {
-    if (_selectedDate == null || _selectedTime == null) {
-      return 'Selecione a data e o horário.';
-    }
-
-    if (_selectedCategory == null) {
-      return 'Selecione uma categoria.';
-    }
-
-    if (_selectedPaymentMethod == null) {
-      return 'Selecione uma forma de pagamento.';
-    }
-
-    final parsedAmount = double.tryParse(amount.replaceAll(',', '.'));
-
-    if (parsedAmount == null) {
-      return 'Informe um valor válido.';
-    }
-
-    final purchasedAt = DateTime(
-      _selectedDate!.year,
-      _selectedDate!.month,
-      _selectedDate!.day,
-      _selectedTime!.hour,
-      _selectedTime!.minute,
-    );
-
-    return await addTransaction(
-      establishment: establishment,
-      amount: parsedAmount,
-      description: description,
-      categoryId: _selectedCategory!.id,
-      purchasedAt: purchasedAt,
-      paymentMethod: _selectedPaymentMethod!,
-      type: _selectedTransactionType,
-    );
   }
 
   // =========================
@@ -269,27 +318,8 @@ class TransactionController extends ChangeNotifier {
     required PaymentMethod paymentMethod,
     required TransactionType type,
   }) async {
-    final validationError = _validateTransaction(
-      establishment: establishment,
-      amount: amount,
-      categoryId: categoryId,
-      purchasedAt: purchasedAt,
-    );
-
-    if (validationError != null) {
-      return validationError;
-    }
-
     if (_isSaving) {
       return 'Aguarde a operação em andamento.';
-    }
-
-    final index = _transactions.indexWhere(
-      (transaction) => transaction.id == id,
-    );
-
-    if (index == -1) {
-      return 'Lançamento não encontrado.';
     }
 
     _isSaving = true;
@@ -307,12 +337,20 @@ class TransactionController extends ChangeNotifier {
         type: type,
       );
 
-      _transactions[index] = updatedTransaction;
+      final index = _transactions.indexWhere(
+        (transaction) => transaction.id == id,
+      );
+
+      if (index == -1) {
+        _transactions.insert(0, updatedTransaction);
+      } else {
+        _transactions[index] = updatedTransaction;
+      }
 
       return null;
     } catch (error, stackTrace) {
       debugPrint('Erro ao atualizar transação: $error');
-      debugPrint('StackTrace: $stackTrace');
+      debugPrintStack(stackTrace: stackTrace);
 
       return 'Não foi possível atualizar a transação.';
     } finally {
@@ -334,26 +372,18 @@ class TransactionController extends ChangeNotifier {
       return 'Aguarde a operação em andamento.';
     }
 
-    final index = _transactions.indexWhere(
-      (transaction) => transaction.id == id,
-    );
-
-    if (index == -1) {
-      return 'Lançamento não encontrado.';
-    }
-
     _isSaving = true;
     notifyListeners();
 
     try {
       await _service.removeTransaction(id);
 
-      _transactions.removeAt(index);
+      _transactions.removeWhere((transaction) => transaction.id == id);
 
       return null;
     } catch (error, stackTrace) {
       debugPrint('Erro ao excluir transação: $error');
-      debugPrint('StackTrace: $stackTrace');
+      debugPrintStack(stackTrace: stackTrace);
 
       return 'Não foi possível excluir a transação.';
     } finally {
@@ -377,31 +407,15 @@ class TransactionController extends ChangeNotifier {
   }
 
   // =========================
-  // Validar Transação
+  // Dispose
   // =========================
 
-  String? _validateTransaction({
-    required String establishment,
-    required double amount,
-    required String categoryId,
-    required DateTime purchasedAt,
-  }) {
-    if (establishment.trim().isEmpty) {
-      return 'Informe o estabelecimento.';
-    }
+  @override
+  void dispose() {
+    establishmentController.dispose();
+    amountController.dispose();
+    descriptionController.dispose();
 
-    if (amount <= 0) {
-      return 'O valor deve ser maior que zero.';
-    }
-
-    if (categoryId.trim().isEmpty) {
-      return 'Selecione uma categoria.';
-    }
-
-    if (purchasedAt.isAfter(DateTime.now())) {
-      return 'A data do lançamento não pode ser futura.';
-    }
-
-    return null;
+    super.dispose();
   }
 }

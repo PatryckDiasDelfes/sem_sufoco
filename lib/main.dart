@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sem_sufoco/features/ExtractPage/controller/extract_controller.dart';
 import 'package:sem_sufoco/features/home/controllers/graphic_controller.dart';
 import 'package:sem_sufoco/features/release_details/controller/release_details_controller.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -53,6 +54,34 @@ Future<void> main() async {
         // =========================
         ChangeNotifierProvider(
           create: (_) => CategoryController()..loadCategories(),
+        ),
+
+        // =========================
+        // Extrato
+        // =========================
+        ChangeNotifierProxyProvider2<
+          TransactionController,
+          CategoryController,
+          ExtractController
+        >(
+          create: (_) => ExtractController(),
+          update:
+              (
+                _,
+                transactionController,
+                categoryController,
+                extractController,
+              ) {
+                extractController!.updateData(
+                  transactions: transactionController.transactions,
+                  categories: categoryController.categories,
+                  isLoading: transactionController.isLoading,
+                  errorMessage: transactionController.errorMessage,
+                  onRefresh: transactionController.loadTransactions,
+                );
+
+                return extractController;
+              },
         ),
 
         // =========================
